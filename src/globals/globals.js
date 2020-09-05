@@ -4,8 +4,6 @@ var globalsVariable = {
 };
 
 
-;
-
 export const setLang = lang => {
   globalsVariable["currentLang"] = lang;
 };
