@@ -1,0 +1,15 @@
+{
+  "Menu": {
+    "About": "About",
+    "Events": "Events",
+    "SignUp": "Sign Up",
+    "login": "log in",
+    "logOut": "Log Out",
+    "Business": "Your Business",
+    "Support": "Support",
+    "AccountSet": "Account Settings",
+    "BusinessOwner": "FOR BUSINESS OWNER",
+    "language": "عربي",
+    "SwitchProfile": "Switch Profile"
+  }
+}
