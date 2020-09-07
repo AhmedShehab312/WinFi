@@ -140,7 +140,7 @@ class UserProfile extends React.Component {
                   </Form>
                 </CardBody>
                 <CardFooter>
-                  <Button className="btn-fill" color="primary" type="submit">
+                  <Button className="btn-fill" color="light-green" type="submit">
                     Save
                   </Button>
                 </CardFooter>

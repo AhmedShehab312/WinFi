@@ -17,9 +17,6 @@ class Sidebar extends React.Component {
   constructor(props) {
     super(props);
     this.activeRoute.bind(this);
-    this.state = {
-      isOpenState: this.props.isOpen
-    }
   }
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
@@ -42,12 +39,6 @@ class Sidebar extends React.Component {
     document.documentElement.classList.remove("nav-open");
   };
 
-  toggle = () => {
-    const { isOpenState } = this.state;
-    this.setState({
-      isOpenState: !isOpenState
-    })
-  }
 
 
   render() {
@@ -129,58 +120,57 @@ class Sidebar extends React.Component {
                   >
                     <i className={prop.icon} />
                     <p id={prop.name.split(" ")[0]}>{prop.name}</p>
-                    {
-                      prop.subs && prop.subs.map((item, key) => {
-                        return (
-                          <UncontrolledCollapse toggler={prop.name.split(" ")[0]}>
-                            <li
-                              className={
-                                item.subSubs ? null : this.activeRoute(item.path) +
-                                  (prop.pro ? " active-pro" : "")
-                              }
-                              key={key}
-                            >
-                              <NavLink
-                                to={item.layout + item.path}
-                                className="nav-link"
-                                activeClassName="active"
-                                onClick={this.props.toggleSidebar}
-                              >
-                                <i className={item.icon} />
-                                <p id={item.name.split(" ")[0]}>{item.name}</p>
-                                {
-                                  item.subSubs && item.subSubs.map((elm, Key) => {
-                                    debugger
-                                    return (
-                                      <UncontrolledCollapse toggler={item.name.split(" ")[0]}>
-                                        <li
-                                          className={
-                                            this.activeRoute(elm.path) +
-                                            (prop.pro ? " active-pro" : "")
-                                          }
-                                          key={Key}
-                                        >
-                                          <NavLink
-                                            to={elm.layout + elm.path}
-                                            className="nav-link"
-                                            activeClassName="active"
-                                            onClick={this.props.toggleSidebar}
-                                          >
-                                            <i className={elm.icon} />
-                                            <p>{elm.name}</p>
-                                          </NavLink>
-                                        </li>
-                                      </UncontrolledCollapse>
-                                    );
-                                  })
-                                }
-                              </NavLink>
-                            </li>
-                          </UncontrolledCollapse>
-                        );
-                      })
-                    }
                   </NavLink>
+                  {
+                    prop.subs && prop.subs.map((item, key) => {
+                      return (
+                        <UncontrolledCollapse toggler={prop.name.split(" ")[0]} style={{ background: '#207d7d' }}>
+                          <li
+                            className={
+                              item.subSubs ? null : this.activeRoute(item.path) +
+                                (prop.pro ? " active-pro" : "")
+                            }
+                            key={key}
+                          >
+                            <NavLink
+                              to={item.layout + item.path}
+                              className="nav-link"
+                              activeClassName="active"
+                              onClick={this.props.toggleSidebar}
+                            >
+                              <i className={item.icon} />
+                              <p id={item.name.split(" ")[0]}>{item.name}</p>
+                            </NavLink>
+                            {
+                              item.subSubs && item.subSubs.map((elm, Key) => {
+                                return (
+                                  <UncontrolledCollapse toggler={item.name.split(" ")[0]} style={{ background: '#074444' }}>
+                                    <li
+                                      className={
+                                        this.activeRoute(elm.path) +
+                                        (prop.pro ? " active-pro" : "")
+                                      }
+                                      key={Key}
+                                    >
+                                      <NavLink
+                                        to={elm.layout + elm.path}
+                                        className="nav-link"
+                                        activeClassName="active"
+                                        onClick={this.props.toggleSidebar}
+                                      >
+                                        <i className={elm.icon} />
+                                        <p>{elm.name}</p>
+                                      </NavLink>
+                                    </li>
+                                  </UncontrolledCollapse>
+                                );
+                              })
+                            }
+                          </li>
+                        </UncontrolledCollapse>
+                      );
+                    })
+                  }
                 </li>
               );
             })}
@@ -194,7 +184,7 @@ class Sidebar extends React.Component {
 
 Sidebar.defaultProps = {
   rtlActive: false,
-  bgColor: "primary",
+  bgColor: "light-green",
   routes: [{}]
 };
 
