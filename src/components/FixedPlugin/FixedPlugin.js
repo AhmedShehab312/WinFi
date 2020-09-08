@@ -40,6 +40,7 @@ class FixedPlugin extends Component {
             <i className="fa fa-cog fa-2x" />
           </div>
           <ul className="dropdown-menu show">
+            <li className="header-title">Change Mode</li>
 
             <li className="adjustments-line text-center color-change">
               <span className="color-label">LIGHT MODE</span>{" "}
@@ -53,7 +54,6 @@ class FixedPlugin extends Component {
               />{" "}
               <span className="color-label">DARK MODE</span>{" "}
             </li>
-
           </ul>
         </div>
       </div>

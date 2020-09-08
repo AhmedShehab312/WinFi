@@ -20,6 +20,7 @@ import {
   Container,
   Modal
 } from "reactstrap";
+import { withRouter } from "react-router-dom";
 
 class AdminNavbar extends React.Component {
   constructor(props) {
@@ -142,7 +143,7 @@ class AdminNavbar extends React.Component {
                   </DropdownToggle>
                   <DropdownMenu className="dropdown-navbar" right tag="ul">
                     <NavLink tag="li">
-                      <DropdownItem className="nav-item">Profile</DropdownItem>
+                      <DropdownItem className="nav-item" onClick={() => { this.props.history.push("CompanyProfile") }}>Profile</DropdownItem>
                     </NavLink>
                     <NavLink tag="li">
                       <DropdownItem className="nav-item">Settings</DropdownItem>
@@ -181,4 +182,4 @@ class AdminNavbar extends React.Component {
   }
 }
 
-export default AdminNavbar;
+export default withRouter(AdminNavbar);

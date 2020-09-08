@@ -1,14 +1,15 @@
 
-import logo from "assets/img/react-logo.png";
+import logo from "assets/img/logo.webp";
 // core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 import React from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
-import routes from "routes.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+import SideMenu from "../../components/Sidebar/SideMenu";
+import routes from "../../routes";
+import { withRouter } from "react-router-dom";
+import NotificationAlert from "react-notification-alert";
 
 var ps;
 
@@ -58,71 +59,16 @@ class Admin extends React.Component {
     this.setState({ sidebarOpened: !this.state.sidebarOpened });
   };
 
-  getRoutes = routes => {
-    let allRoutes = [];
-    routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
-        if (prop.subs) {
-          prop.subs.map((Item, Key) => {
-            allRoutes.push(
-              <Route
-                path={Item.layout + Item.path}
-                component={Item.component}
-                key={Key}
-              />)
-          })
-          if (prop.subs.subSubs) {
-            prop.subs.subSubs.map((Item, Key) => {
-              allRoutes.push(
-                <Route
-                  path={Item.layout + Item.path}
-                  component={Item.component}
-                  key={Key}
-                />)
-            })
-          }
-        }
-        else {
-          allRoutes.push(
-            <Route
-              path={prop.layout + prop.path}
-              component={prop.component}
-              key={key}
-            />
-          );
-        }
 
-      }
-    });
-    return allRoutes;
-  };
-
-  // handleBgClick = color => {
-  //   this.setState({ backgroundColor: color });
-  // };
-
-  getBrandText = path => {
-    for (let i = 0; i < routes.length; i++) {
-      if (
-        this.props.location.pathname.indexOf(
-          routes[i].layout + routes[i].path
-        ) !== -1
-      ) {
-        return routes[i].name;
-      }
-    }
-    return "Brand";
-  };
   render() {
     return (
       <>
-        <div className="wrapper">
+        <div className="wrapper white-content">
           <Sidebar
             {...this.props}
-            routes={routes}
+            routes={SideMenu}
             bgColor={this.state.backgroundColor}
             logo={{
-              // outterLink: "https://www.creative-tim.com/",
               text: "WinFi",
               imgSrc: logo
             }}
@@ -135,24 +81,24 @@ class Admin extends React.Component {
           >
             <AdminNavbar
               {...this.props}
-              brandText={this.getBrandText(this.props.location.pathname)}
+              brandText={""}
               toggleSidebar={this.toggleSidebar}
               sidebarOpened={this.state.sidebarOpened}
             />
-            <Switch>
-              {this.getRoutes(routes)}
-              {/* <Redirect from="*" to="/admin/dashboard" /> */}
-            </Switch>
+            <div className="react-notification-alert-container">
+              <NotificationAlert ref="notificationAlert" />
+            </div>
 
+            {routes}
           </div>
         </div>
-        <FixedPlugin
+        {/* <FixedPlugin
           bgColor={this.state.backgroundColor}
           handleBgClick={this.handleBgClick}
-        />
+        /> */}
       </>
     );
   }
 }
 
-export default Admin;
+export default withRouter(Admin);

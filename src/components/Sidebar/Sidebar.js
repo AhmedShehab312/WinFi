@@ -1,8 +1,7 @@
 
 /*eslint-disable*/
 import React from "react";
-import { NavLink, Link } from "react-router-dom";
-// nodejs library to set properties for components
+import { NavLink, Link, withRouter } from "react-router-dom";
 import { PropTypes } from "prop-types";
 
 // javascript plugin used to create scrollbars on windows
@@ -18,6 +17,7 @@ class Sidebar extends React.Component {
     super(props);
     this.activeRoute.bind(this);
   }
+
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
@@ -30,11 +30,15 @@ class Sidebar extends React.Component {
       });
     }
   }
+
+
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
     }
   }
+
+
   linkOnClick = () => {
     document.documentElement.classList.remove("nav-open");
   };
@@ -43,7 +47,6 @@ class Sidebar extends React.Component {
 
   render() {
     const { bgColor, routes, logo } = this.props;
-
     let logoImg = null;
     let logoText = null;
     if (logo !== undefined) {
@@ -114,7 +117,7 @@ class Sidebar extends React.Component {
                   key={key}
                 >
                   <NavLink
-                    to={prop.subs ? prop.subs[0].layout + prop.subs[0].path : prop.layout + prop.path}
+                    to={prop.subs ? prop.subs[0].path : prop.path}
                     className="nav-link"
                     activeClassName="active"
                   >
@@ -133,7 +136,7 @@ class Sidebar extends React.Component {
                             key={key}
                           >
                             <NavLink
-                              to={item.layout + item.path}
+                              to={item.path}
                               className="nav-link"
                               activeClassName="active"
                               onClick={this.props.toggleSidebar}
@@ -153,7 +156,7 @@ class Sidebar extends React.Component {
                                       key={Key}
                                     >
                                       <NavLink
-                                        to={elm.layout + elm.path}
+                                        to={elm.path}
                                         className="nav-link"
                                         activeClassName="active"
                                         onClick={this.props.toggleSidebar}
@@ -208,4 +211,4 @@ Sidebar.propTypes = {
   })
 };
 
-export default Sidebar;
+export default withRouter(Sidebar);

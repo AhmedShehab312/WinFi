@@ -1,0 +1,17 @@
+.CompanyProfile {
+  .profilePicContainer {
+    width: 170px;
+    height: 170px;
+    margin: auto;
+    margin-bottom: 50px !important;
+    img {
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      border: 1px solid #37a9a9;
+    }
+    input {
+      cursor: pointer;
+    }
+  }
+}
