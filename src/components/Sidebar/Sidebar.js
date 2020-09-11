@@ -1,14 +1,14 @@
 
 /*eslint-disable*/
-import React from "react";
-import { NavLink, Link, withRouter } from "react-router-dom";
-import { PropTypes } from "prop-types";
-
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
-
+import { PropTypes } from "prop-types";
+import React from "react";
+import { Link, NavLink, withRouter } from "react-router-dom";
 // reactstrap components
-import { Nav, NavLink as ReactstrapNavLink, UncontrolledCollapse } from "reactstrap";
+import { Nav, UncontrolledCollapse } from "reactstrap";
+import './SidebarStyle.scss';
+
 
 var ps;
 
@@ -16,6 +16,9 @@ class Sidebar extends React.Component {
   constructor(props) {
     super(props);
     this.activeRoute.bind(this);
+    this.state = {
+      collapseIcon: false
+    }
   }
 
   // verifies if routeName is the one active (in browser input)
@@ -38,15 +41,39 @@ class Sidebar extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    this.checkCurrentScreen();
+  }
+
 
   linkOnClick = () => {
     document.documentElement.classList.remove("nav-open");
   };
 
+  collapseToIcon() {
+    const { collapseIcon } = this.state;
+
+    this.setState({ collapseIcon: !collapseIcon }, () => this.checkCurrentScreen())
+  }
+
+  checkCurrentScreen() {
+
+    const { collapseIcon } = this.state;
+    let myElement = document.getElementById('MainPanel').getElementsByClassName('content');
+    if (collapseIcon) {
+      myElement[0].style.paddingLeft = '130px'
+    }
+    else {
+      myElement[0].style.paddingLeft = '280px'
+    }
+
+  }
 
 
   render() {
     const { bgColor, routes, logo } = this.props;
+    const { collapseIcon } = this.state;
+
     let logoImg = null;
     let logoText = null;
     if (logo !== undefined) {
@@ -97,15 +124,18 @@ class Sidebar extends React.Component {
       }
     }
     return (
-      <div className="sidebar" data={bgColor}>
+      <div className="sidebar" data={bgColor} style={collapseIcon ? { width: '5%' } : null}>
+        <div className="backIconContainer" onClick={() => { this.collapseToIcon() }}>
+          {collapseIcon ? <i className="fa fa-arrow-circle-right"></i> : <i className="fa fa-arrow-circle-left"></i>}
+        </div>
         <div className="sidebar-wrapper" ref="sidebar">
-          {logoImg !== null || logoText !== null ? (
+          {!collapseIcon ? logoImg !== null || logoText !== null ? (
             <div className="logo">
               {logoImg}
               {logoText}
             </div>
-          ) : null}
-          <Nav>
+          ) : null : null}
+          <Nav style={collapseIcon ? { marginTop: 50 } : null}>
             {routes.map((prop, key) => {
               if (prop.redirect) return null;
               return (
@@ -122,12 +152,13 @@ class Sidebar extends React.Component {
                     activeClassName="active"
                   >
                     <i className={prop.icon} />
-                    <p id={prop.name.split(" ")[0]}>{prop.name}</p>
+
+                    <p id={prop.name.split(" ")[0]} className={collapseIcon ? "hideTitle" : null}>{prop.name}</p>
                   </NavLink>
                   {
                     prop.subs && prop.subs.map((item, key) => {
                       return (
-                        <UncontrolledCollapse toggler={prop.name.split(" ")[0]} style={{ background: '#207d7d' }}>
+                        <UncontrolledCollapse toggler={prop.name.split(" ")[0]} style={{ background: '#556082' }}>
                           <li
                             className={
                               item.subSubs ? null : this.activeRoute(item.path) +
@@ -142,7 +173,7 @@ class Sidebar extends React.Component {
                               onClick={this.props.toggleSidebar}
                             >
                               <i className={item.icon} />
-                              <p id={item.name.split(" ")[0]}>{item.name}</p>
+                              <p id={item.name.split(" ")[0]} className={collapseIcon ? "hideTitle" : null}>{item.name}</p>
                             </NavLink>
                             {
                               item.subSubs && item.subSubs.map((elm, Key) => {
@@ -162,7 +193,7 @@ class Sidebar extends React.Component {
                                         onClick={this.props.toggleSidebar}
                                       >
                                         <i className={elm.icon} />
-                                        <p>{elm.name}</p>
+                                        <p className={collapseIcon ? "hideTitle" : null}>{elm.name}</p>
                                       </NavLink>
                                     </li>
                                   </UncontrolledCollapse>

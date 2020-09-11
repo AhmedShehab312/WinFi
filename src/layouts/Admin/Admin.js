@@ -78,6 +78,7 @@ class Admin extends React.Component {
             className="main-panel"
             ref="mainPanel"
             data={this.state.backgroundColor}
+            id="MainPanel"
           >
             <AdminNavbar
               {...this.props}

@@ -9,6 +9,7 @@ import AdminLayout from "layouts/Admin/Admin.js";
 
 import "assets/scss/black-dashboard-react.scss";
 import "assets/css/nucleo-icons.css";
+import 'font-awesome/css/font-awesome.min.css';
 
 
 ReactDOM.render(

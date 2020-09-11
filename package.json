@@ -6,6 +6,7 @@
     "@types/react": "16.9.23",
     "chart.js": "2.9.3",
     "classnames": "2.2.6",
+    "font-awesome": "^4.7.0",
     "history": "4.10.1",
     "i18next": "^19.7.0",
     "node-sass": "4.13.1",
