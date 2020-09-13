@@ -8,9 +8,11 @@ import { Link, NavLink, withRouter } from "react-router-dom";
 // reactstrap components
 import { Nav, UncontrolledCollapse } from "reactstrap";
 import './SidebarStyle.scss';
+import { HtttpGetDefult } from "../../actions/httpClient";
 
 
-var ps;
+let ps;
+let DeviceWidth = window.matchMedia("(max-width: 700px)")
 
 class Sidebar extends React.Component {
   constructor(props) {
@@ -39,6 +41,8 @@ class Sidebar extends React.Component {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
     }
+
+
   }
 
   componentDidUpdate() {
@@ -60,12 +64,15 @@ class Sidebar extends React.Component {
 
     const { collapseIcon } = this.state;
     let myElement = document.getElementById('MainPanel').getElementsByClassName('content');
-    if (collapseIcon) {
-      myElement[0].style.paddingLeft = '130px'
+    if (DeviceWidth) {
+      if (collapseIcon) {
+        myElement[0].style.paddingLeft = '130px'
+      }
+      else {
+        myElement[0].style.paddingLeft = '280px'
+      }
     }
-    else {
-      myElement[0].style.paddingLeft = '280px'
-    }
+
 
   }
 
@@ -73,68 +80,12 @@ class Sidebar extends React.Component {
   render() {
     const { bgColor, routes, logo } = this.props;
     const { collapseIcon } = this.state;
-
-    let logoImg = null;
-    let logoText = null;
-    if (logo !== undefined) {
-      if (logo.outterLink !== undefined) {
-        logoImg = (
-          <a
-            href={logo.outterLink}
-            className="simple-text logo-mini"
-            target="_blank"
-            onClick={this.props.toggleSidebar}
-          >
-            <div className="logo-img">
-              <img src={logo.imgSrc} alt="react-logo" />
-            </div>
-          </a>
-        );
-        logoText = (
-          <a
-            href={logo.outterLink}
-            className="simple-text logo-normal"
-            target="_blank"
-            onClick={this.props.toggleSidebar}
-          >
-            {logo.text}
-          </a>
-        );
-      } else {
-        logoImg = (
-          <Link
-            to={logo.innerLink}
-            className="simple-text logo-mini"
-            onClick={this.props.toggleSidebar}
-          >
-            <div className="logo-img">
-              <img src={logo.imgSrc} alt="react-logo" />
-            </div>
-          </Link>
-        );
-        logoText = (
-          <Link
-            to={logo.innerLink}
-            className="simple-text logo-normal"
-            onClick={this.props.toggleSidebar}
-          >
-            {logo.text}
-          </Link>
-        );
-      }
-    }
     return (
       <div className="sidebar" data={bgColor} style={collapseIcon ? { width: '5%' } : null}>
         <div className="backIconContainer" onClick={() => { this.collapseToIcon() }}>
-          {collapseIcon ? <i className="fa fa-arrow-circle-right"></i> : <i className="fa fa-arrow-circle-left"></i>}
+          {DeviceWidth ? collapseIcon ? <i className="fa fa-arrow-circle-right"></i> : <i className="fa fa-arrow-circle-left"></i> : null}
         </div>
         <div className="sidebar-wrapper" ref="sidebar">
-          {!collapseIcon ? logoImg !== null || logoText !== null ? (
-            <div className="logo">
-              {logoImg}
-              {logoText}
-            </div>
-          ) : null : null}
           <Nav style={collapseIcon ? { marginTop: 50 } : null}>
             {routes.map((prop, key) => {
               if (prop.redirect) return null;
@@ -156,7 +107,7 @@ class Sidebar extends React.Component {
                     <p id={prop.name.split(" ")[0]} className={collapseIcon ? "hideTitle" : null}>{prop.name}</p>
                   </NavLink>
                   {
-                    prop.subs && prop.subs.map((item, key) => {
+                    prop.subs && prop.subs.map((item, ItemKey) => {
                       return (
                         <UncontrolledCollapse toggler={prop.name.split(" ")[0]} style={{ background: '#556082' }}>
                           <li
@@ -164,7 +115,7 @@ class Sidebar extends React.Component {
                               item.subSubs ? null : this.activeRoute(item.path) +
                                 (prop.pro ? " active-pro" : "")
                             }
-                            key={key}
+                            key={ItemKey}
                           >
                             <NavLink
                               to={item.path}
@@ -176,7 +127,7 @@ class Sidebar extends React.Component {
                               <p id={item.name.split(" ")[0]} className={collapseIcon ? "hideTitle" : null}>{item.name}</p>
                             </NavLink>
                             {
-                              item.subSubs && item.subSubs.map((elm, Key) => {
+                              item.subSubs && item.subSubs.map((elm, index) => {
                                 return (
                                   <UncontrolledCollapse toggler={item.name.split(" ")[0]} style={{ background: '#074444' }}>
                                     <li
@@ -184,7 +135,7 @@ class Sidebar extends React.Component {
                                         this.activeRoute(elm.path) +
                                         (prop.pro ? " active-pro" : "")
                                       }
-                                      key={Key}
+                                      key={index}
                                     >
                                       <NavLink
                                         to={elm.path}

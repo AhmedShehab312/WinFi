@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@types/react": "16.9.23",
+    "axios": "^0.20.0",
     "chart.js": "2.9.3",
     "classnames": "2.2.6",
     "font-awesome": "^4.7.0",
@@ -20,6 +21,7 @@
     "react-notification-alert": "0.0.12",
     "react-router-dom": "5.1.2",
     "react-scripts": "3.4.0",
+    "react-scroll": "^1.8.1",
     "reactstrap": "8.4.1"
   },
   "scripts": {

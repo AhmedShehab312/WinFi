@@ -1,6 +1,4 @@
 
-import logo from "assets/img/logo.webp";
-// core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 // javascript plugin used to create scrollbars on windows
@@ -68,10 +66,6 @@ class Admin extends React.Component {
             {...this.props}
             routes={SideMenu}
             bgColor={this.state.backgroundColor}
-            logo={{
-              text: "WinFi",
-              imgSrc: logo
-            }}
             toggleSidebar={this.toggleSidebar}
           />
           <div

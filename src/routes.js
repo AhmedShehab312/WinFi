@@ -1,17 +1,17 @@
 
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Brands from "views/Brands/Brands.js";
-import CompanyProfile from "views/CompanyProfile/CompanyProfile.js";
-import Dashboard from "views/Dashboard.js";
-import Reports from "views/Reports/Reports.js";
+import { Route, Switch } from "react-router-dom";
 import Admins from "views//Admins/Admins.js";
 import Analytics from "views/Analytics/Analytics.js";
-import Contacts from "views/Contacts/Contacts.js";
-import InvoicesPayments from "views/InvoicesPayments/InvoicesPayments.js";
-import InternetManagement from "views/InternetManagement/InternetManagement.js";
-import Integration from "views/Integration/Integration.js";
 import Branches from "views/Branches/Branches.js";
+import Brands from "views/Brands/Brands.js";
+import CompanyProfile from "views/CompanyProfile/CompanyProfile.js";
+import Contacts from "views/Contacts/Contacts.js";
+import Dashboard from "views/Dashboard.js";
+import Integration from "views/Integration/Integration.js";
+import InternetManagement from "views/InternetManagement/InternetManagement.js";
+import InvoicesPayments from "views/InvoicesPayments/InvoicesPayments.js";
+import Reports from "views/Reports/Reports.js";
 
 const routes = (
   <Switch>

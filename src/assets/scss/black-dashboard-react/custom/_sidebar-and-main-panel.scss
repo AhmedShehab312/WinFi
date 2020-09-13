@@ -341,7 +341,7 @@
     @include linear-gradient($info-states, $info);
   }
   &[data="green"] {
-    @include linear-gradient(#324479, #324479);
+    @include linear-gradient(#000, #000);
   }
 
   .user {

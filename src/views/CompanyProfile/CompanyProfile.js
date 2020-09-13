@@ -16,7 +16,7 @@ class CompanyProfile extends React.Component {
     changePhoto(event) {
         const file = event.currentTarget.files;
         var reader = new FileReader();
-        var url = reader.readAsDataURL(file[0]);
+        reader.readAsDataURL(file[0]);
 
         reader.onloadend = function (e) {
             this.setState({
@@ -40,12 +40,12 @@ class CompanyProfile extends React.Component {
                                         <FormGroup className="profilePicContainer">
                                             <label>Logo</label>
                                             <Input ref="file" type="file" name="file" onChange={this.changePhoto.bind(this)} />
-                                            <img src={this.state.imgSrc} />
+                                            <img alt="" src={this.state.imgSrc} />
                                         </FormGroup>
                                     </Col>
                                     <Col md={6}>
                                         <FormGroup>
-                                            <label for="title">Name (unique)</label>
+                                            <label >Name (unique)</label>
                                             <Input type="text" placeholder="Ahmed212" value="Ahmed234" disabled />
                                         </FormGroup>
                                     </Col>
@@ -59,7 +59,7 @@ class CompanyProfile extends React.Component {
                                 <Row>
                                     <Col md={6}>
                                         <FormGroup>
-                                            <label for="title">UserName</label>
+                                            <label >UserName</label>
                                             <Input type="text" placeholder="Ahmed212" value="AhmedShehab234" disabled />
                                         </FormGroup>
                                     </Col>
@@ -71,19 +71,19 @@ class CompanyProfile extends React.Component {
                                     </Col>
                                 </Row>
                                 <FormGroup>
-                                    <label for="exampleAddress">Address</label>
+                                    <label >Address</label>
                                     <Input type="text" name="address" id="exampleAddress" placeholder="1234 Main St" />
                                 </FormGroup>
                                 <Row>
                                     <Col md={6}>
                                         <FormGroup>
-                                            <label for="title">Contact</label>
+                                            <label >Contact</label>
                                             <Input type="number" placeholder="01222****" />
                                         </FormGroup>
                                     </Col>
                                     <Col md={6}>
                                         <FormGroup>
-                                            <label for="title">Contact Personal</label>
+                                            <label >Contact Personal</label>
                                             <Input type="number" placeholder="01222****" />
                                         </FormGroup>
                                     </Col>

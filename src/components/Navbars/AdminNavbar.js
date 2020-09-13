@@ -5,23 +5,22 @@ import classNames from "classnames";
 
 // reactstrap components
 import {
-  Button,
   Collapse,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   UncontrolledDropdown,
   Input,
-  InputGroup,
   NavbarBrand,
   Navbar,
   NavLink,
   Nav,
   Container,
-  Modal
+  Modal,
 } from "reactstrap";
 import { withRouter } from "react-router-dom";
-
+import logo from "assets/img/logo.webp";
+import './AdminNavStyle.scss';
 class AdminNavbar extends React.Component {
   constructor(props) {
     super(props);
@@ -74,7 +73,7 @@ class AdminNavbar extends React.Component {
     return (
       <>
         <Navbar
-          className={classNames("navbar-absolute", this.state.color)}
+          className={classNames("navbar-absolute , NavbarContainer", this.state.color)}
           expand="lg"
         >
           <Container fluid>
@@ -113,8 +112,14 @@ class AdminNavbar extends React.Component {
               <span className="navbar-toggler-bar navbar-kebab" />
             </button>
             <Collapse navbar isOpen={this.state.collapseOpen}>
-              <Nav className="ml-auto" navbar>
+              <Nav>
+                <div className="logo">
+                  <img src={logo} alt="" />
+                  <a className="simple-text logo-normal" target="_blank">WINFI</a>
+                </div>
 
+              </Nav>
+              <Nav className="ml-auto" navbar>
                 <UncontrolledDropdown nav>
                   <DropdownToggle
                     caret

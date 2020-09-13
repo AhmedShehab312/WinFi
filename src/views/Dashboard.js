@@ -5,7 +5,7 @@ import classNames from "classnames";
 // react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
 
-import i18n, { changeLang } from "../i18n";
+import i18n from "../i18n";
 import {
   getlang,
 } from "../globals/globals";

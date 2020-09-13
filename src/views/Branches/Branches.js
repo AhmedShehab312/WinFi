@@ -157,7 +157,7 @@ class Branches extends React.Component {
 
     RemoveItem(key) {
         const { data } = this.state;
-        let reslut = data.filter((Item, index) => { return key != index })
+        let reslut = data.filter((Item, index) => { return key !== index })
         this.setState({ data: reslut })
         this.notify("tr", 3, "The item deleted successfully")
     }
