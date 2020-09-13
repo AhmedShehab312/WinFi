@@ -6,14 +6,17 @@ import AdminLayout from "layouts/Admin/Admin.js";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from 'react-redux'
+import { configureStore } from './store/configureStore';
 
 
 
 
 ReactDOM.render(
-  <BrowserRouter>
-    <AdminLayout />
-  </BrowserRouter>,
-
+  <Provider store={configureStore}>
+    <BrowserRouter>
+      <AdminLayout />
+    </BrowserRouter>
+  </Provider>,
   document.getElementById("root")
 );
