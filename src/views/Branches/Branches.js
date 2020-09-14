@@ -180,7 +180,7 @@ class Branches extends React.Component {
                                             <h2 className="title">Branches</h2>
                                         </Col>
                                         <Col className="AddContainer">
-                                            <i className="tim-icons  icon-simple-add " id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
+                                            <i className="fa fa-plus-circle" id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
                                             <UncontrolledTooltip placement="right" target="Add">Add Brand</UncontrolledTooltip>
                                         </Col>
                                     </Row>
@@ -237,7 +237,7 @@ class Branches extends React.Component {
                                     <Form>
                                         <Row form>
                                             <Col md={6}>
-                                                <InputWithText type="email" label="Name" placeholder={'Enter  Name'} />
+                                                <InputWithText type="email" label="Name" placeholder={'Enter  Name'} onChange={(val) => { console.log(val) }} />
                                             </Col>
                                             <Col md={6}>
                                                 <FormGroup>

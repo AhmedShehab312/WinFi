@@ -1,14 +1,10 @@
 
-/*eslint-disable*/
-// javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 import { PropTypes } from "prop-types";
 import React from "react";
-import { Link, NavLink, withRouter } from "react-router-dom";
-// reactstrap components
+import { NavLink, withRouter } from "react-router-dom";
 import { Nav, UncontrolledCollapse } from "reactstrap";
 import './SidebarStyle.scss';
-import { HtttpGetDefult } from "../../actions/httpClient";
 
 
 let ps;
@@ -27,6 +23,7 @@ class Sidebar extends React.Component {
   activeRoute(routeName) {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   }
+
   componentDidMount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.sidebar, {
@@ -41,8 +38,6 @@ class Sidebar extends React.Component {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
     }
-
-
   }
 
   componentDidUpdate() {
@@ -56,15 +51,14 @@ class Sidebar extends React.Component {
 
   collapseToIcon() {
     const { collapseIcon } = this.state;
-
     this.setState({ collapseIcon: !collapseIcon }, () => this.checkCurrentScreen())
   }
 
-  checkCurrentScreen() {
 
+  checkCurrentScreen() {
     const { collapseIcon } = this.state;
     let myElement = document.getElementById('MainPanel').getElementsByClassName('content');
-    if (DeviceWidth) {
+    if (!DeviceWidth.matches) {
       if (collapseIcon) {
         myElement[0].style.paddingLeft = '130px'
       }
@@ -72,8 +66,9 @@ class Sidebar extends React.Component {
         myElement[0].style.paddingLeft = '280px'
       }
     }
-
-
+    else {
+      myElement[0].style.paddingLeft = '15px'
+    }
   }
 
 
@@ -83,7 +78,7 @@ class Sidebar extends React.Component {
     return (
       <div className="sidebar" data={bgColor} style={collapseIcon ? { width: '5%' } : null}>
         <div className="backIconContainer" onClick={() => { this.collapseToIcon() }}>
-          {DeviceWidth ? collapseIcon ? <i className="fa fa-arrow-circle-right"></i> : <i className="fa fa-arrow-circle-left"></i> : null}
+          {!DeviceWidth.matches && collapseIcon ? <i className="fa fa-arrow-circle-right"></i> : <i className="fa fa-arrow-circle-left"></i>}
         </div>
         <div className="sidebar-wrapper" ref="sidebar">
           <Nav style={collapseIcon ? { marginTop: 50 } : null}>
@@ -109,7 +104,7 @@ class Sidebar extends React.Component {
                   {
                     prop.subs && prop.subs.map((item, ItemKey) => {
                       return (
-                        <UncontrolledCollapse toggler={prop.name.split(" ")[0]} style={{ background: '#556082' }}>
+                        <UncontrolledCollapse toggler={prop.name.split(" ")[0]} style={{ background: '#737373' }}>
                           <li
                             className={
                               item.subSubs ? null : this.activeRoute(item.path) +
@@ -168,29 +163,13 @@ class Sidebar extends React.Component {
 }
 
 Sidebar.defaultProps = {
-  rtlActive: false,
   bgColor: "light-green",
   routes: [{}]
 };
 
 Sidebar.propTypes = {
-  // if true, then instead of the routes[i].name, routes[i].rtlName will be rendered
-  // insde the links of this component
-  rtlActive: PropTypes.bool,
   bgColor: PropTypes.oneOf(["primary", "blue", "green"]),
   routes: PropTypes.arrayOf(PropTypes.object),
-  logo: PropTypes.shape({
-    // innerLink is for links that will direct the user within the app
-    // it will be rendered as <Link to="...">...</Link> tag
-    innerLink: PropTypes.string,
-    // outterLink is for links that will direct the user outside the app
-    // it will be rendered as simple <a href="...">...</a> tag
-    outterLink: PropTypes.string,
-    // the text of the logo
-    text: PropTypes.node,
-    // the image src of the logo
-    imgSrc: PropTypes.string
-  })
 };
 
 export default withRouter(Sidebar);

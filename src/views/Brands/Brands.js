@@ -252,7 +252,7 @@ class Brands extends React.Component {
                                             <h2 className="title">Brands</h2>
                                         </Col>
                                         <Col className="AddContainer">
-                                            <i className="tim-icons  icon-simple-add " id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
+                                            <i className="fa fa-plus-circle" id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
                                             <UncontrolledTooltip placement="right" target="Add">Add Brand</UncontrolledTooltip>
                                         </Col>
                                     </Row>
@@ -278,9 +278,9 @@ class Brands extends React.Component {
                                                         <td className="text-center">{Item.address}</td>
                                                         <td className="text-center">{Item.employeesNo}</td>
                                                         <td className="text-center">{Item.assignedPackage}</td>
-                                                        <td className="text-center"><i className="tim-icons icon-pencil" onClick={() => { this.setState({ addMode: false, editMode: true, selectedBrand: Item, detailsMode: false }) }} /></td>
-                                                        <td className="text-center"><i className="tim-icons icon-alert-circle-exc" onClick={() => this.setState({ addMode: false, editMode: false, selectedBrand: Item, detailsMode: true })} /></td>
-                                                        <td className="text-center"><i className="tim-icons icon-simple-remove" onClick={() => this.RemoveItem(key)} />                                                        </td>
+                                                        <td className="text-center"><i className="fa fa-edit" onClick={() => { this.setState({ addMode: false, editMode: true, selectedBrand: Item, detailsMode: false }) }} /></td>
+                                                        <td className="text-center"><i className="fas fa-info-circle" onClick={() => this.setState({ addMode: false, editMode: false, selectedBrand: Item, detailsMode: true })} /></td>
+                                                        <td className="text-center"><i className="fas fa-trash-alt" onClick={() => this.RemoveItem(key)} /></td>
 
                                                     </tr>
                                                 )

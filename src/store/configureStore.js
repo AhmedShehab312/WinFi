@@ -1,9 +1,11 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import ARAMCOPaymentsReducer from './reducers/ARAMCOPaymentsReducer';
+import ProfileReducer from './reducers/ProfileReducer';
+import BrandsReducer from './reducers/BrandsReducer';
 
 const storageReducer = combineReducers({
-    ARAMCOPaymentsState: ARAMCOPaymentsReducer,
+    ProfileState: ProfileReducer,
+    BrandsState: BrandsReducer
 });
 
 

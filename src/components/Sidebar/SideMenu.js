@@ -16,7 +16,7 @@ var SideMenu = [
     {
         path: "/dashboard",
         name: "Dashboard",
-        icon: "tim-icons icon-chart-pie-36",
+        icon: "fas fa-tachometer-alt",
         component: Dashboard,
     },
     {
@@ -25,7 +25,7 @@ var SideMenu = [
         subs: [{
             path: "/CompanyProfile",
             name: "Company Profile",
-            icon: "tim-icons icon-single-02",
+            icon: "fas fa-id-badge",
             component: CompanyProfile,
         },
         {
@@ -51,7 +51,7 @@ var SideMenu = [
     {
         path: "/Admins",
         name: "Admins",
-        icon: "fa fa-user",
+        icon: "fas fa-user",
         component: Admins,
     },
     {
