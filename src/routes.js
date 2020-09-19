@@ -1,7 +1,8 @@
 
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import Admins from "views//Admins/Admins.js";
+import Login from 'views/Login/Login';
+import Admins from "views/Admins/Admins.js";
 import Analytics from "views/Analytics/Analytics.js";
 import Branches from "views/Branches/Branches.js";
 import Brands from "views/Brands/Brands.js";
@@ -15,7 +16,8 @@ import Reports from "views/Reports/Reports.js";
 
 const routes = (
   <Switch>
-    <Route path="/" exact strict component={Dashboard} />
+    <Route path="/" exact strict component={Login} />
+    <Route path="/login" exact strict component={Login} />
     <Route path="/dashboard" exact strict component={Dashboard} />
     <Route path="/CompanyProfile" exact strict component={CompanyProfile} />
     <Route path="/Brands" exact strict component={Brands} />

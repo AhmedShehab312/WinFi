@@ -1,6 +1,8 @@
 
 var globalsVariable = {
   languages: [],
+  loggedIn: false,
+
 };
 
 
@@ -12,6 +14,10 @@ export const getlang = () => {
   return globalsVariable["currentLang"];
 };
 
+
+export const setLoggedIn = _loggedIn => {
+  globalsVariable["loggedIn"] = _loggedIn;
+};
 
 
 export const displayToast = (errMsg, success = false) => {

@@ -28,6 +28,8 @@ httpClient.interceptors.response.use(
   }
 );
 
+
+
 function errorHandler(err, data) {
   // handle global error
   var errMsg = "";
@@ -80,10 +82,14 @@ export function setRequestHeader(isRefresh, isLogin, url) {
     httpClient.defaults.headers.post["Content-Type"] =
       "application/x-www-form-urlencoded; charset=utf-8";
   }
-
-
-
+  else {
+    httpClient.defaults.headers.common["Authorization"] = "bearer " + accessToken;
+    httpClient.defaults.headers.post["Content-Type"] = "application/json";
+  }
 }
+
+
+
 
 export function HtttpGetDefult(
   url,

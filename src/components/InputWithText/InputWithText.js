@@ -2,11 +2,11 @@ import { PropTypes } from "prop-types";
 import React from 'react';
 import { FormGroup, Input } from 'reactstrap';
 
-const InputWithText = ({ label, type, placeholder, onChange, disabled }) => {
+const InputWithText = ({ label, type, value = null, placeholder, onChange, disabled }) => {
     return (
         <FormGroup>
             <label >{label}</label>
-            <Input type={type} placeholder={placeholder} onChange={(val) => onChange(val.target.value)} disabled={disabled} />
+            <Input type={type} placeholder={placeholder} onChange={onChange ? (val) => onChange(val.target.value) : null} disabled={disabled} defaultValue={value ? value : null} />
         </FormGroup>
     );
 };
@@ -16,7 +16,8 @@ InputWithText.defaultProps = {
     type: "text",
     onChange: null,
     placeholder: "",
-    disabled: false
+    disabled: false,
+    value: ""
 };
 
 InputWithText.propTypes = {
@@ -24,7 +25,8 @@ InputWithText.propTypes = {
     type: PropTypes.string,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    value: PropTypes.string
 
 };
 

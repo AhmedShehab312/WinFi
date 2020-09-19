@@ -13,6 +13,7 @@ import {
 import './BranchesStyle.scss';
 import NotificationAlert from "react-notification-alert";
 import { InputWithText } from '../../components/ComponentModule'
+import i18n from '../../i18n';
 
 class Branches extends React.Component {
     constructor(props) {
@@ -25,91 +26,104 @@ class Branches extends React.Component {
             data: [
                 {
                     id: '1',
-                    name: 'StarBuksZamalek',
-                    address: "Cairo",
-                    brandPackage: 'plan A',
-                    mainPackage: 'plane A1',
-                    employeesNo: '120',
                     brandName: 'StarBuks',
-                    usedFrompackage: {
-                        totalSMS: '20',
-                        totalNotification: '65',
-                        totalEmails: '22',
-                        renewalDate: '12-2-2021'
-                    },
-                    routerAccessPoint: [
+                    Package: 'plan A',
+                    branches: [
                         {
-                            name: 'R1',
-                            ip: '192.168.1.2'
+                            id: '1',
+                            name: 'StarBuksZamalek',
+                            address: "Cairo",
+                            mainPackage: 'plane A1',
+                            usedFrompackage: {
+                                totalSMS: '20',
+                                totalNotification: '65',
+                                totalEmails: '22',
+                                renewalDate: '12-2-2021'
+                            },
+                            routerAccessPoint: [
+                                {
+                                    name: 'R1',
+                                    ip: '192.168.1.2'
+                                },
+                                {
+                                    name: 'R2',
+                                    ip: '192.168.1.3'
+                                },
+                                {
+                                    name: 'R3',
+                                    ip: '192.168.1.3'
+                                }
+                            ]
                         },
-                        {
-                            name: 'R2',
-                            ip: '192.168.1.3'
-                        },
-                        {
-                            name: 'R3',
-                            ip: '192.168.1.3'
-                        }
                     ]
                 },
                 {
                     id: '1',
-                    name: 'MacDokki',
-                    address: "Cairo",
-                    brandPackage: 'plan C',
-                    mainPackage: 'plane C3',
-                    employeesNo: '180',
-                    brandName: 'Mac',
-                    usedFrompackage: {
-                        totalSMS: '210',
-                        totalNotificati1on: '615',
-                        totalEmails: '22',
-                        renewalDate: '14-12-2021'
-                    },
-                    routerAccessPoint: [
+                    brandName: 'StarBuks',
+                    Package: 'plan A',
+                    branches: [
                         {
-                            name: 'R1',
-                            ip: '192.168.1.2'
+                            id: '1',
+                            name: 'StarBuksZamalek',
+                            address: "Cairo",
+                            mainPackage: 'plane A1',
+                            usedFrompackage: {
+                                totalSMS: '20',
+                                totalNotification: '65',
+                                totalEmails: '22',
+                                renewalDate: '12-2-2021'
+                            },
+                            routerAccessPoint: [
+                                {
+                                    name: 'R1',
+                                    ip: '192.168.1.2'
+                                },
+                                {
+                                    name: 'R2',
+                                    ip: '192.168.1.3'
+                                },
+                                {
+                                    name: 'R3',
+                                    ip: '192.168.1.3'
+                                }
+                            ]
                         },
+                    ]
+                }, {
+                    id: '2',
+                    brandName: 'MAC',
+                    Package: 'plan B',
+                    branches: [
                         {
-                            name: 'R2',
-                            ip: '192.168.1.3'
+                            id: '1',
+                            name: 'MACZamalek',
+                            address: "Cairo",
+                            mainPackage: 'plane A1',
+                            usedFrompackage: {
+                                totalSMS: '20',
+                                totalNotification: '65',
+                                totalEmails: '22',
+                                renewalDate: '12-2-2021'
+                            },
+                            routerAccessPoint: [
+                                {
+                                    name: 'R1',
+                                    ip: '192.168.1.2'
+                                },
+                                {
+                                    name: 'R2',
+                                    ip: '192.168.1.3'
+                                },
+                                {
+                                    name: 'R3',
+                                    ip: '192.168.1.3'
+                                }
+                            ]
                         },
-                        {
-                            name: 'R3',
-                            ip: '192.168.1.3'
-                        }
-                    ],
-                },
-                {
-                    id: '1',
-                    name: 'KentakiZamalek',
-                    address: "Cairo",
-                    brandPackage: 'plan B',
-                    mainPackage: 'plane B11',
-                    employeesNo: '220',
-                    brandName: 'Kentaki',
-                    usedFrompackage: {
-                        totalSMS: '260',
-                        totalNotification: '665',
-                        totalEmails: '292',
-                        renewalDate: '12-6-2021'
-                    },
-                    routerAccessPoint: [
-                        {
-                            name: 'R1',
-                            ip: '192.168.1.2'
-                        },
-                        {
-                            name: 'R2',
-                            ip: '192.168.1.3'
-                        },
-                        {
-                            name: 'R3',
-                            ip: '192.168.1.3'
-                        }
                     ]
                 },
+
+
             ],
             selectedBrand: null
 
@@ -177,11 +191,11 @@ class Branches extends React.Component {
                                 <CardHeader>
                                     <Row>
                                         <Col>
-                                            <h2 className="title">Branches</h2>
+                                            <h2 className="title">{i18n.t("Branches.title")}</h2>
                                         </Col>
                                         <Col className="AddContainer">
                                             <i className="fa fa-plus-circle" id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
-                                            <UncontrolledTooltip placement="right" target="Add">Add Brand</UncontrolledTooltip>
+                                            <UncontrolledTooltip placement="right" target="Add">{i18n.t("Branches.add")}</UncontrolledTooltip>
                                         </Col>
                                     </Row>
                                 </CardHeader>
@@ -189,15 +203,14 @@ class Branches extends React.Component {
                                     <Table className="tablesorter" responsive hover>
                                         <thead className="text-primary">
                                             <tr>
-                                                <th className="text-center">Name</th>
-                                                <th className="text-center">address</th>
-                                                <th className="text-center">employeesNo</th>
-                                                <th className="text-center">brand Name</th>
-                                                <th className="text-center">brand Package</th>
-                                                <th className="text-center">main Package</th>
-                                                <th className="text-center">Edit</th>
-                                                <th className="text-center">Details</th>
-                                                <th className="text-center">Delete</th>
+                                                <th className="text-center">{i18n.t("Branches.Name")}</th>
+                                                <th className="text-center">{i18n.t("Branches.address")}</th>
+                                                <th className="text-center">{i18n.t("Branches.brandName")}</th>
+                                                <th className="text-center">{i18n.t("Branches.brandPackage")}</th>
+                                                <th className="text-center">{i18n.t("Branches.mainPackage")}</th>
+                                                <th className="text-center">{i18n.t("Branches.Edit")}</th>
+                                                <th className="text-center">{i18n.t("Branches.Details")}</th>
+                                                <th className="text-center">{i18n.t("Branches.Delete")}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -206,18 +219,15 @@ class Branches extends React.Component {
                                                     <tr key={key}>
                                                         <td className="text-center">{Item.name}</td>
                                                         <td className="text-center">{Item.address}</td>
-                                                        <td className="text-center">{Item.employeesNo}</td>
                                                         <td className="text-center">{Item.brandName}</td>
                                                         <td className="text-center">{Item.brandPackage}</td>
                                                         <td className="text-center">{Item.mainPackage}</td>
-                                                        <td className="text-center"><i className="tim-icons icon-pencil" onClick={() => { this.setState({ addMode: false, editMode: true, selectedBrand: Item, detailsMode: false }) }} /></td>
-                                                        <td className="text-center"><i className="tim-icons icon-alert-circle-exc" onClick={() => this.setState({ addMode: false, editMode: false, selectedBrand: Item, detailsMode: true })} /></td>
-                                                        <td className="text-center"><i className="tim-icons icon-simple-remove" onClick={() => this.RemoveItem(key)} />                                                        </td>
-
+                                                        <td className="text-center"><i className="fa fa-edit" onClick={() => { this.setState({ addMode: false, editMode: true, selectedBrand: Item, detailsMode: false }) }} /></td>
+                                                        <td className="text-center"><i className="fas fa-info-circle" onClick={() => this.setState({ addMode: false, editMode: false, selectedBrand: Item, detailsMode: true })} /></td>
+                                                        <td className="text-center"><i className="fas fa-trash-alt" onClick={() => this.RemoveItem(key)} /></td>
                                                     </tr>
                                                 )
                                             })}
-
                                         </tbody>
                                     </Table>
                                 </CardBody>
@@ -229,7 +239,7 @@ class Branches extends React.Component {
                                 <CardHeader>
                                     <Row>
                                         <Col>
-                                            <h2 className="title">Add Branch</h2>
+                                            <h2 className="title">{i18n.t("Branches.add")}</h2>
                                         </Col>
                                     </Row>
                                 </CardHeader>
@@ -332,16 +342,17 @@ class Branches extends React.Component {
                         }
 
                         {!editMode && !addMode && detailsMode &&
+                            // Branch Details
                             <React.Fragment>
                                 <CardHeader>
                                     <Row>
                                         <Col>
-                                            <h2 className="title">{selectedBrand.name} Details</h2>
-                                            <h3 className="Subtitle">Basic Info</h3>
+                                            <h2 className="title">{selectedBrand.name} {i18n.t("Branches.Details")}</h2>
+                                            <h3 className="Subtitle">{i18n.t("Branches.BasicInfo")}</h3>
                                         </Col>
                                         <Col className="AddContainer">
                                             <i className="tim-icons  icon-minimal-right" id="up" onClick={() => { this.setState({ addMode: false, editMode: false, detailsMode: false }) }} />
-                                            <UncontrolledTooltip placement="right" target="up">Back</UncontrolledTooltip>
+                                            <UncontrolledTooltip placement="right" target="up">{i18n.t("global.Back")}</UncontrolledTooltip>
                                         </Col>
                                     </Row>
                                 </CardHeader>
@@ -349,59 +360,57 @@ class Branches extends React.Component {
                                     <div className="dataContainer">
                                         <Row>
                                             <Col size="6">
-                                                <label className="item">Name:</label>
+                                                <label className="item">{i18n.t("Branches.Name")}:</label>
                                                 <label className="value">{selectedBrand.name}</label>
                                             </Col>
                                             <Col size="6">
-                                                <label className="item">Brand Name:</label>
+                                                <label className="item">{i18n.t("Branches.BrandName")}:</label>
                                                 <label className="value">{selectedBrand.brandName}</label>
                                             </Col>
                                         </Row>
                                         <Row>
                                             <Col size="6">
-                                                <label className="item">Employees Number:</label>
-                                                <label className="value">{selectedBrand.employeesNo}</label>
+                                                <label className="item">{i18n.t("Branches.BrandPackge")}:</label>
+                                                <label className="value">{selectedBrand.brandPackage}</label>
                                             </Col>
                                             <Col size="6">
-                                                <label className="item">Address:</label>
-                                                <label className="value">{selectedBrand.address}</label>
+                                                <label className="item">{i18n.t("Branches.BranchPackge")}:</label>
+                                                <label className="value">{selectedBrand.mainPackage}</label>
                                             </Col>
                                         </Row>
                                         <Row>
                                             <Col size="6">
-                                                <label className="item">Brand Packge:</label>
-                                                <label className="value">{selectedBrand.brandPackage}</label>
+                                                <label className="item">{i18n.t("Branches.Address")}:</label>
+                                                <label className="value">{selectedBrand.address}</label>
                                             </Col>
-                                            <Col size="6">
-                                                <label className="item">Branch Packge:</label>
-                                                <label className="value">{selectedBrand.mainPackage}</label>
-                                            </Col>
+
                                         </Row>
+
                                         <hr className="sperator" />
                                     </div>
                                     <Row>
                                         <Col>
-                                            <h3 className="Subtitle">Packge Info</h3>
+                                            <h3 className="Subtitle">{i18n.t("Branches.PackgeInfo")}</h3>
                                         </Col>
                                     </Row>
                                     <div className="dataContainer">
                                         <Row>
                                             <Col size="6">
-                                                <label className="item">Used SMS:</label>
+                                                <label className="item">{i18n.t("Branches.UsedSMS")}:</label>
                                                 <label className="value">{selectedBrand.usedFrompackage.totalSMS}</label>
                                             </Col>
                                             <Col size="6">
-                                                <label className="item">Used Notification:</label>
+                                                <label className="item">{i18n.t("Branches.UsedNotification")}:</label>
                                                 <label className="value">{selectedBrand.usedFrompackage.totalNotification}</label>
                                             </Col>
                                         </Row>
                                         <Row>
                                             <Col size="6">
-                                                <label className="item">Used Emails:</label>
+                                                <label className="item">{i18n.t("Branches.UsedEmails")}:</label>
                                                 <label className="value">{selectedBrand.usedFrompackage.totalEmails}</label>
                                             </Col>
                                             <Col size="6">
-                                                <label className="item">Renewal Date:</label>
+                                                <label className="item">{i18n.t("Branches.RenewalDate")}:</label>
                                                 <label className="value">{selectedBrand.usedFrompackage.renewalDate}</label>
                                             </Col>
                                         </Row>
@@ -409,15 +418,15 @@ class Branches extends React.Component {
                                     <hr className="sperator" />
                                     <Row>
                                         <Col>
-                                            <h3 className="Subtitle">Router and access point data</h3>
+                                            <h3 className="Subtitle">{i18n.t("Branches.Router")} </h3>
                                         </Col>
                                     </Row>
                                     <div className="dataContainer">
                                         <Table className="tablesorter" responsive striped>
                                             <thead className="text-primary">
                                                 <tr>
-                                                    <th className="text-center">Name</th>
-                                                    <th className="text-center">IP</th>
+                                                    <th className="text-center"> {i18n.t("Branches.Name")}</th>
+                                                    <th className="text-center"> {i18n.t("Branches.IP")} </th>
                                                 </tr>
                                             </thead>
                                             <tbody>

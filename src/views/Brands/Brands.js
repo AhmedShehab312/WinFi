@@ -12,7 +12,9 @@ import {
 } from 'reactstrap';
 import './BrandsStyle.scss';
 import NotificationAlert from "react-notification-alert";
-import { InputWithText } from '../../components/ComponentModule'
+import { InputWithText, DropDown } from '../../components/ComponentModule'
+import { HtttpGetDefult, HtttpPostDefult } from '../../actions/httpClient';
+import i18n from '../../i18n';
 
 class Brands extends React.Component {
     constructor(props) {
@@ -26,7 +28,7 @@ class Brands extends React.Component {
                     id: '1',
                     name: 'StarBuks',
                     address: "Cairo",
-                    assignedPackage: 'plan A',
+                    assignedPackage: { name: "A", key: 1 },
                     employeesNo: '40',
                     usedFrompackage: {
                         totalSMS: '20',
@@ -39,7 +41,7 @@ class Brands extends React.Component {
                     id: '2',
                     name: 'Macdonald',
                     address: "Alex",
-                    assignedPackage: 'plan B',
+                    assignedPackage: { name: "B", key: 1 },
                     employeesNo: '80',
                     usedFrompackage: {
                         totalSMS: '12',
@@ -48,142 +50,26 @@ class Brands extends React.Component {
                         renewalDate: '12-4-2021'
                     }
                 },
-                {
-                    id: '3',
-                    name: 'kentucky',
-                    address: "Cairo",
-                    assignedPackage: 'plan A',
-                    employeesNo: '120',
-                    usedFrompackage: {
-                        totalSMS: '42',
-                        totalNotification: '55',
-                        totalEmails: '63',
-                        renewalDate: '12-8-2021'
-                    }
 
-                },
-                {
-                    id: '1',
-                    name: 'StarBuks',
-                    address: "Cairo",
-                    assignedPackage: 'plan A',
-                    employeesNo: '40',
-                    usedFrompackage: {
-                        totalSMS: '20',
-                        totalNotification: '65',
-                        totalEmails: '22',
-                        renewalDate: '12-2-2021'
-                    }
-                },
-                {
-                    id: '2',
-                    name: 'Macdonald',
-                    address: "Alex",
-                    assignedPackage: 'plan B',
-                    employeesNo: '80',
-                    usedFrompackage: {
-                        totalSMS: '12',
-                        totalNotification: '25',
-                        totalEmails: '23',
-                        renewalDate: '12-4-2021'
-                    }
-                },
-                {
-                    id: '3',
-                    name: 'kentucky',
-                    address: "Cairo",
-                    assignedPackage: 'plan A',
-                    employeesNo: '120',
-                    usedFrompackage: {
-                        totalSMS: '42',
-                        totalNotification: '55',
-                        totalEmails: '63',
-                        renewalDate: '12-8-2021'
-                    }
-
-                },
-                {
-                    id: '1',
-                    name: 'StarBuks',
-                    address: "Cairo",
-                    assignedPackage: 'plan A',
-                    employeesNo: '40',
-                    usedFrompackage: {
-                        totalSMS: '20',
-                        totalNotification: '65',
-                        totalEmails: '22',
-                        renewalDate: '12-2-2021'
-                    }
-                },
-                {
-                    id: '2',
-                    name: 'Macdonald',
-                    address: "Alex",
-                    assignedPackage: 'plan B',
-                    employeesNo: '80',
-                    usedFrompackage: {
-                        totalSMS: '12',
-                        totalNotification: '25',
-                        totalEmails: '23',
-                        renewalDate: '12-4-2021'
-                    }
-                },
-                {
-                    id: '3',
-                    name: 'kentucky',
-                    address: "Cairo",
-                    assignedPackage: 'plan A',
-                    employeesNo: '120',
-                    usedFrompackage: {
-                        totalSMS: '42',
-                        totalNotification: '55',
-                        totalEmails: '63',
-                        renewalDate: '12-8-2021'
-                    }
-
-                },
-                {
-                    id: '1',
-                    name: 'StarBuks',
-                    address: "Cairo",
-                    assignedPackage: 'plan A',
-                    employeesNo: '40',
-                    usedFrompackage: {
-                        totalSMS: '20',
-                        totalNotification: '65',
-                        totalEmails: '22',
-                        renewalDate: '12-2-2021'
-                    }
-                },
-                {
-                    id: '2',
-                    name: 'Macdonald',
-                    address: "Alex",
-                    assignedPackage: 'plan B',
-                    employeesNo: '80',
-                    usedFrompackage: {
-                        totalSMS: '12',
-                        totalNotification: '25',
-                        totalEmails: '23',
-                        renewalDate: '12-4-2021'
-                    }
-                },
-                {
-                    id: '3',
-                    name: 'kentucky',
-                    address: "Cairo",
-                    assignedPackage: 'plan A',
-                    employeesNo: '120',
-                    usedFrompackage: {
-                        totalSMS: '42',
-                        totalNotification: '55',
-                        totalEmails: '63',
-                        renewalDate: '12-8-2021'
-                    }
-
-                }
             ],
-            selectedBrand: null
+            selectedBrand: null,
+            newBrand: {
+                id: '1',
+                name: '',
+                address: "",
+                logo: require("../../../src/assets/img/default-avatar.jpg"),
+                assignedPackage: null,
+                usedFrompackage: {
+                    totalSMS: '20',
+                    totalNotification: '65',
+                    totalEmails: '22',
+                    renewalDate: '12-2-2021'
+                }
+            },
+            Packges: [
+                { name: "A", key: 1 },
+                { name: "B", key: 2 }
+            ]
 
         }
     }
@@ -234,8 +120,109 @@ class Brands extends React.Component {
         this.notify("tr", 3, "The item deleted successfully")
     }
 
+    componentDidMount() {
+        let body = {
+            "name": "Starbucks",
+            "username": "Starbucks",
+            "password": "Starbucks",
+            "logo": "",
+            "contact": "0100000000",
+            "contactPerson": "Mohamed Ahmed",
+            "address": "Cairo"
+        }
+        HtttpGetDefult('customer/1').then(result => {
+            console.log(result)
+        })
+    }
+
+
+    changeNewInput(Input, val) {
+        switch (Input) {
+            case 'name':
+                this.setState({
+                    newBrand: {
+                        ...this.state.newBrand,
+                        name: val
+                    }
+                })
+                break;
+            case 'address':
+                this.setState({
+                    newBrand: {
+                        ...this.state.newBrand,
+                        address: val
+                    }
+                })
+                break;
+            case 'assignedPackage':
+                this.setState({
+                    newBrand: {
+                        ...this.state.newBrand,
+                        assignedPackage: val
+                    }
+                })
+                break;
+        }
+
+    }
+
+    changeEditInput(Input, val) {
+        switch (Input) {
+            case 'name':
+                this.setState({
+                    selectedBrand: {
+                        ...this.state.selectedBrand,
+                        name: val
+                    }
+                })
+                break;
+            case 'address':
+                this.setState({
+                    selectedBrand: {
+                        ...this.state.selectedBrand,
+                        address: val
+                    }
+                })
+                break;
+            case 'assignedPackage':
+                this.setState({
+                    selectedBrand: {
+                        ...this.state.selectedBrand,
+                        assignedPackage: val
+                    }
+                })
+                break;
+        }
+
+    }
+
+
+    changePhoto(event) {
+        event.preventDefault();
+        const file = event.currentTarget.files;
+        var reader = new FileReader();
+        reader.readAsDataURL(file[0]);
+
+        reader.onloadend = function (e) {
+            this.setState({
+                newBrand: {
+                    ...this.state.newBrand,
+                    logo: [reader.result]
+                }
+            })
+        }.bind(this);
+    }
+
+    addNewBrand() {
+        this.setState({ addMode: false, editMode: false, detailsMode: false });
+    }
+
+    editBrand() {
+        this.setState({ addMode: false, editMode: false, detailsMode: false })
+    }
+
     render() {
-        const { data, editMode, addMode, detailsMode, selectedBrand } = this.state;
+        const { data, editMode, addMode, detailsMode, selectedBrand, Packges, newBrand } = this.state;
         return (
             <div className="content Brands">
                 <div className="react-notification-alert-container">
@@ -249,11 +236,11 @@ class Brands extends React.Component {
                                 <CardHeader>
                                     <Row>
                                         <Col>
-                                            <h2 className="title">Brands</h2>
+                                            <h2 className="title">{i18n.t("Brands.title")}</h2>
                                         </Col>
                                         <Col className="AddContainer">
                                             <i className="fa fa-plus-circle" id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
-                                            <UncontrolledTooltip placement="right" target="Add">Add Brand</UncontrolledTooltip>
+                                            <UncontrolledTooltip placement="right" target="Add">{i18n.t("Brands.add")}</UncontrolledTooltip>
                                         </Col>
                                     </Row>
                                 </CardHeader>
@@ -261,13 +248,12 @@ class Brands extends React.Component {
                                     <Table className="tablesorter" responsive hover>
                                         <thead className="text-primary">
                                             <tr>
-                                                <th className="text-center">Name</th>
-                                                <th className="text-center">address</th>
-                                                <th className="text-center">employeesNo</th>
-                                                <th className="text-center">Package</th>
-                                                <th className="text-center">Edit</th>
-                                                <th className="text-center">Details</th>
-                                                <th className="text-center">Delete</th>
+                                                <th className="text-center">{i18n.t("Brands.Name")}</th>
+                                                <th className="text-center">{i18n.t("Brands.Address")}</th>
+                                                <th className="text-center">{i18n.t("Brands.Package")}</th>
+                                                <th className="text-center">{i18n.t("Brands.Edit")}</th>
+                                                <th className="text-center">{i18n.t("Brands.Details")}</th>
+                                                <th className="text-center">{i18n.t("Brands.Delete")}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -276,8 +262,7 @@ class Brands extends React.Component {
                                                     <tr key={key}>
                                                         <td className="text-center">{Item.name}</td>
                                                         <td className="text-center">{Item.address}</td>
-                                                        <td className="text-center">{Item.employeesNo}</td>
-                                                        <td className="text-center">{Item.assignedPackage}</td>
+                                                        <td className="text-center">{Item.assignedPackage.name}</td>
                                                         <td className="text-center"><i className="fa fa-edit" onClick={() => { this.setState({ addMode: false, editMode: true, selectedBrand: Item, detailsMode: false }) }} /></td>
                                                         <td className="text-center"><i className="fas fa-info-circle" onClick={() => this.setState({ addMode: false, editMode: false, selectedBrand: Item, detailsMode: true })} /></td>
                                                         <td className="text-center"><i className="fas fa-trash-alt" onClick={() => this.RemoveItem(key)} /></td>
@@ -297,48 +282,35 @@ class Brands extends React.Component {
                                 <CardHeader>
                                     <Row>
                                         <Col>
-                                            <h2 className="title">Add Brand</h2>
+                                            <h2 className="title">{i18n.t("Brands.add")}</h2>
                                         </Col>
                                     </Row>
                                 </CardHeader>
                                 <CardBody>
                                     <Form>
-                                        <Row form>
-                                            <Col md={6}>
-                                                <InputWithText type="email" label="Name" placeholder={'Enter your Name'} />
-                                            </Col>
-                                            <Col md={6}>
-                                                <FormGroup>
-                                                    <label for="examplePassword"> Packge</label>
-                                                    <Input type="email" name="email" id="exampleEmail" placeholder="with a placeholder" />
+                                        <Row>
+                                            <Col md={12}>
+                                                <FormGroup className="logoContainer">
+                                                    <label>{i18n.t("CompanyProfile.Logo")}</label>
+                                                    <Input ref="file" type="file" name="file" onChange={this.changePhoto.bind(this)} />
+                                                    <img alt="" src={newBrand.logo} />
                                                 </FormGroup>
                                             </Col>
                                         </Row>
-                                        <FormGroup>
-                                            <label for="exampleAddress">Address</label>
-                                            <Input type="text" name="address" id="exampleAddress" placeholder="1234 Main St" />
-                                        </FormGroup>
-                                        <Row form>
+                                        <Row >
+                                            <Col md={6}>
+                                                <InputWithText type="text" label={i18n.t("Brands.Name")} placeholder={i18n.t("Brands.NamePlacholder")} onChange={(val) => { this.changeNewInput('name', val) }} />
+                                            </Col>
                                             <Col md={6}>
                                                 <FormGroup>
-                                                    <label for="exampleCity">City</label>
-                                                    <Input type="text" name="city" id="exampleCity" />
+                                                    <DropDown label={i18n.t("Brands.Package")} items={Packges} onClick={(val) => { this.changeNewInput("assignedPackage", val) }} selctedItem={newBrand.assignedPackage} />
                                                 </FormGroup>
                                             </Col>
-                                            <Col md={4}>
-                                                <FormGroup>
-                                                    <label for="exampleState">State</label>
-                                                    <Input type="text" name="state" id="exampleState" />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col md={2}>
-                                                <FormGroup>
-                                                    <label for="exampleZip">Zip</label>
-                                                    <Input type="text" name="zip" id="exampleZip" />
-                                                </FormGroup>
+                                            <Col md={12}>
+                                                <InputWithText type="text" label={i18n.t("Brands.Address")} placeholder={i18n.t("Brands.AddressPlacholder")} onChange={(val) => { this.changeNewInput('address', val) }} />
                                             </Col>
                                         </Row>
-                                        <Button onClick={() => this.setState({ addMode: false, editMode: false, detailsMode: false })}>Submit</Button>
+                                        <Button onClick={() => this.addNewBrand()}>{i18n.t("global.submit")}</Button>
                                     </Form>
                                 </CardBody>
                             </React.Fragment>
@@ -349,7 +321,7 @@ class Brands extends React.Component {
                                 <CardHeader>
                                     <Row>
                                         <Col>
-                                            <h2 className="title">Edit Brand </h2>
+                                            <h2 className="title">{i18n.t("Brands.editBrand")}</h2>
                                         </Col>
                                     </Row>
                                 </CardHeader>
@@ -357,59 +329,36 @@ class Brands extends React.Component {
                                     <Form>
                                         <Row form>
                                             <Col md={6}>
-                                                <FormGroup>
-                                                    <label for="title">Name</label>
-                                                    <Input type="email" name="email" id="exampleEmail" placeholder="with a placeholder" value={this.state.selectedBrand.name} />
-                                                </FormGroup>
+                                                <InputWithText type="text" label={i18n.t("Brands.Name")} value={selectedBrand.name} placeholder={i18n.t("Brands.NamePlacholder")} onChange={(val) => { this.changeEditInput('name', val) }} />
                                             </Col>
                                             <Col md={6}>
                                                 <FormGroup>
-                                                    <label for="examplePassword"> Packge</label>
-                                                    <Input type="email" name="email" id="exampleEmail" placeholder="with a placeholder" value={this.state.selectedBrand.assignedPackage} />
+                                                    <DropDown label={i18n.t("Brands.Package")} items={Packges} onClick={(val) => { this.changeEditInput("assignedPackage", val) }} selctedItem={selectedBrand.assignedPackage} />
                                                 </FormGroup>
                                             </Col>
+                                            <Col md={12}>
+                                                <InputWithText type="text" label={i18n.t("Brands.Address")} placeholder={i18n.t("Brands.AddressPlacholder")} onChange={(val) => { this.changeEditInput('address', val) }} value={selectedBrand.address} />
+                                            </Col>
+
                                         </Row>
-                                        <FormGroup>
-                                            <label for="exampleAddress">Address</label>
-                                            <Input type="text" name="address" id="exampleAddress" placeholder="1234 Main St" value={this.state.selectedBrand.address} />
-                                        </FormGroup>
-                                        <Row form>
-                                            <Col md={6}>
-                                                <FormGroup>
-                                                    <label for="exampleCity">City</label>
-                                                    <Input type="text" name="city" id="exampleCity" />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col md={4}>
-                                                <FormGroup>
-                                                    <label for="exampleState">State</label>
-                                                    <Input type="text" name="state" id="exampleState" />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col md={2}>
-                                                <FormGroup>
-                                                    <label for="exampleZip">Zip</label>
-                                                    <Input type="text" name="zip" id="exampleZip" />
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-                                        <Button onClick={() => this.setState({ addMode: false, editMode: false, detailsMode: false })}>Submit</Button>
+                                        <Button onClick={() => this.editBrand()}>{i18n.t("global.submit")}</Button>
                                     </Form>
                                 </CardBody>
                             </React.Fragment>
                         }
 
                         {!editMode && !addMode && detailsMode &&
+                            // Brand Details
                             <React.Fragment>
                                 <CardHeader>
                                     <Row>
                                         <Col>
-                                            <h2 className="title">{selectedBrand.name} Details</h2>
+                                            <h2 className="title">{selectedBrand.name} {i18n.t("Brands.Details")}</h2>
                                             <h3 className="Subtitle">Basic Info</h3>
                                         </Col>
                                         <Col className="AddContainer">
                                             <i className="tim-icons  icon-minimal-right" id="up" onClick={() => { this.setState({ addMode: false, editMode: false, detailsMode: false }) }} />
-                                            <UncontrolledTooltip placement="right" target="up">Back</UncontrolledTooltip>
+                                            <UncontrolledTooltip placement="right" target="up">{i18n.t("Brands.Back")}</UncontrolledTooltip>
                                         </Col>
                                     </Row>
                                 </CardHeader>
@@ -417,49 +366,45 @@ class Brands extends React.Component {
                                     <div className="dataContainer">
                                         <Row>
                                             <Col size="6">
-                                                <label className="item">Name:</label>
+                                                <label className="item">{i18n.t("Brands.Name")}:</label>
                                                 <label className="value">{selectedBrand.name}</label>
                                             </Col>
                                             <Col size="6">
-                                                <label className="item">Address:</label>
+                                                <label className="item">{i18n.t("Brands.Address")}:</label>
                                                 <label className="value">{selectedBrand.address}</label>
                                             </Col>
                                         </Row>
                                         <Row>
                                             <Col size="6">
-                                                <label className="item">Employees Number:</label>
-                                                <label className="value">{selectedBrand.employeesNo}</label>
-                                            </Col>
-                                            <Col size="6">
-                                                <label className="item">Assigned Package:</label>
-                                                <label className="value">{selectedBrand.assignedPackage}</label>
+                                                <label className="item">{i18n.t("Brands.Package")}:</label>
+                                                <label className="value">{selectedBrand.assignedPackage.name}</label>
                                             </Col>
                                         </Row>
                                         <hr className="sperator" />
                                     </div>
                                     <Row>
                                         <Col>
-                                            <h3 className="Subtitle">Packge Info</h3>
+                                            <h3 className="Subtitle">{i18n.t("Brands.PackgeInfo")}</h3>
                                         </Col>
                                     </Row>
                                     <div className="dataContainer">
                                         <Row>
                                             <Col size="6">
-                                                <label className="item">Used SMS:</label>
+                                                <label className="item">{i18n.t("Brands.UsedSMS")}:</label>
                                                 <label className="value">{selectedBrand.usedFrompackage.totalSMS}</label>
                                             </Col>
                                             <Col size="6">
-                                                <label className="item">Used Notification:</label>
+                                                <label className="item">{i18n.t("Brands.UsedNotification")}:</label>
                                                 <label className="value">{selectedBrand.usedFrompackage.totalNotification}</label>
                                             </Col>
                                         </Row>
                                         <Row>
                                             <Col size="6">
-                                                <label className="item">Used Emails:</label>
+                                                <label className="item">{i18n.t("Brands.UsedEmails")}:</label>
                                                 <label className="value">{selectedBrand.usedFrompackage.totalEmails}</label>
                                             </Col>
                                             <Col size="6">
-                                                <label className="item">Renewal Date:</label>
+                                                <label className="item">{i18n.t("Brands.RenewalDate")}:</label>
                                                 <label className="value">{selectedBrand.usedFrompackage.renewalDate}</label>
                                             </Col>
                                         </Row>

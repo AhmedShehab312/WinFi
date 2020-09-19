@@ -1,4 +1,4 @@
-const ENDPOINT = "https://jsonplaceholder.typicode.com/";
+const ENDPOINT = "http://18.157.186.202:3000/";
 
 const TIMEOUT = 120000;
 

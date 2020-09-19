@@ -17,10 +17,13 @@ class Admin extends React.Component {
     this.state = {
       backgroundColor: "green",
       sidebarOpened:
-        document.documentElement.className.indexOf("nav-open") !== -1
+        document.documentElement.className.indexOf("nav-open") !== -1,
+      showSideMenu: true,
+      pathname: ""
     };
   }
   componentDidMount() {
+    this.checkIFLogin();
     if (navigator.platform.indexOf("Win") > -1) {
       document.documentElement.className += " perfect-scrollbar-on";
       document.documentElement.classList.remove("perfect-scrollbar-off");
@@ -31,6 +34,23 @@ class Admin extends React.Component {
       }
     }
   }
+
+
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.location.pathname === "/login" || nextProps.location.pathname === "/") {
+      return {
+        showSideMenu: false,
+      };
+    }
+    else {
+      return {
+        showSideMenu: true,
+      };
+    }
+
+  }
+
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
@@ -38,59 +58,59 @@ class Admin extends React.Component {
       document.documentElement.classList.remove("perfect-scrollbar-on");
     }
   }
-  componentDidUpdate(e) {
-    if (e.history.action === "PUSH") {
-      if (navigator.platform.indexOf("Win") > -1) {
-        let tables = document.querySelectorAll(".table-responsive");
-        for (let i = 0; i < tables.length; i++) {
-          ps = new PerfectScrollbar(tables[i]);
-        }
-      }
-      document.documentElement.scrollTop = 0;
-      document.scrollingElement.scrollTop = 0;
-      this.refs.mainPanel.scrollTop = 0;
-    }
-  }
+
   // this function opens and closes the sidebar on small devices
   toggleSidebar = () => {
     document.documentElement.classList.toggle("nav-open");
     this.setState({ sidebarOpened: !this.state.sidebarOpened });
   };
 
+  // Check if the current page is login page
+  checkIFLogin() {
+    let myElement = document.getElementById('MainPanel').getElementsByClassName('content');
+    if (myElement[0].classList[1] == "LoginContainer") {
+      this.setState({ showSideMenu: false })
+    }
+    else {
+      this.setState({ showSideMenu: true })
+    }
+  }
 
   render() {
+    const { showSideMenu } = this.state
     return (
       <>
         <div className="wrapper white-content">
-          <Sidebar
-            {...this.props}
-            routes={SideMenu}
-            bgColor={this.state.backgroundColor}
-            toggleSidebar={this.toggleSidebar}
-          />
+          {
+            showSideMenu &&
+            <Sidebar
+              {...this.props}
+              routes={SideMenu}
+              bgColor={this.state.backgroundColor}
+              toggleSidebar={this.toggleSidebar}
+            />
+          }
           <div
             className="main-panel"
             ref="mainPanel"
             data={this.state.backgroundColor}
             id="MainPanel"
           >
-            <AdminNavbar
-              {...this.props}
-              brandText={""}
-              toggleSidebar={this.toggleSidebar}
-              sidebarOpened={this.state.sidebarOpened}
-            />
+            {
+              showSideMenu &&
+              <AdminNavbar
+                {...this.props}
+                brandText={""}
+                toggleSidebar={this.toggleSidebar}
+                sidebarOpened={this.state.sidebarOpened}
+              />
+            }
             <div className="react-notification-alert-container">
               <NotificationAlert ref="notificationAlert" />
             </div>
-
             {routes}
           </div>
         </div>
-        {/* <FixedPlugin
-          bgColor={this.state.backgroundColor}
-          handleBgClick={this.handleBgClick}
-        /> */}
       </>
     );
   }
