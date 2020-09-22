@@ -12,8 +12,12 @@ import {
 } from 'reactstrap';
 import './BranchesStyle.scss';
 import NotificationAlert from "react-notification-alert";
-import { InputWithText } from '../../components/ComponentModule'
+import { InputWithText, DropDown } from '../../components/ComponentModule'
 import i18n from '../../i18n';
+import { HtttpDeleteDefult, HtttpPostDefult, HtttpPutDefult, HtttpGetDefult } from '../../actions/httpClient';
+import { connect } from 'react-redux';
+import { StoreProfile } from '../../store/actions/ProfileAction';
+import { displayToast } from '../../globals/globals';
 
 class Branches extends React.Component {
     constructor(props) {
@@ -22,110 +26,17 @@ class Branches extends React.Component {
             editMode: false,
             addMode: false,
             detailsMode: false,
-            brands: ["StarBuks", "MacDokki", "Kentaki"],
-            data: [
-                {
-                    id: '1',
-                    brandName: 'StarBuks',
-                    Package: 'plan A',
-                    branches: [
-                        {
-                            id: '1',
-                            name: 'StarBuksZamalek',
-                            address: "Cairo",
-                            mainPackage: 'plane A1',
-                            usedFrompackage: {
-                                totalSMS: '20',
-                                totalNotification: '65',
-                                totalEmails: '22',
-                                renewalDate: '12-2-2021'
-                            },
-                            routerAccessPoint: [
-                                {
-                                    name: 'R1',
-                                    ip: '192.168.1.2'
-                                },
-                                {
-                                    name: 'R2',
-                                    ip: '192.168.1.3'
-                                },
-                                {
-                                    name: 'R3',
-                                    ip: '192.168.1.3'
-                                }
-                            ]
-                        },
-                    ]
-                },
-                {
-                    id: '1',
-                    brandName: 'StarBuks',
-                    Package: 'plan A',
-                    branches: [
-                        {
-                            id: '1',
-                            name: 'StarBuksZamalek',
-                            address: "Cairo",
-                            mainPackage: 'plane A1',
-                            usedFrompackage: {
-                                totalSMS: '20',
-                                totalNotification: '65',
-                                totalEmails: '22',
-                                renewalDate: '12-2-2021'
-                            },
-                            routerAccessPoint: [
-                                {
-                                    name: 'R1',
-                                    ip: '192.168.1.2'
-                                },
-                                {
-                                    name: 'R2',
-                                    ip: '192.168.1.3'
-                                },
-                                {
-                                    name: 'R3',
-                                    ip: '192.168.1.3'
-                                }
-                            ]
-                        },
-                    ]
-                }, {
-                    id: '2',
-                    brandName: 'MAC',
-                    Package: 'plan B',
-                    branches: [
-                        {
-                            id: '1',
-                            name: 'MACZamalek',
-                            address: "Cairo",
-                            mainPackage: 'plane A1',
-                            usedFrompackage: {
-                                totalSMS: '20',
-                                totalNotification: '65',
-                                totalEmails: '22',
-                                renewalDate: '12-2-2021'
-                            },
-                            routerAccessPoint: [
-                                {
-                                    name: 'R1',
-                                    ip: '192.168.1.2'
-                                },
-                                {
-                                    name: 'R2',
-                                    ip: '192.168.1.3'
-                                },
-                                {
-                                    name: 'R3',
-                                    ip: '192.168.1.3'
-                                }
-                            ]
-                        },
-                    ]
-                },
+            brands: null,
+            selectedBrand: null,
+            Branchs: null,
+            selectedBranch: null,
+            newBranch: {
+                name: "",
+                BrandId: "",
+            },
+            selectedBranchIndex: null,
 
 
-            ],
-            selectedBrand: null
 
         }
     }
@@ -169,15 +80,101 @@ class Branches extends React.Component {
         this.refs.notificationAlert.notificationAlert(options);
     };
 
-    RemoveItem(key) {
+    RemoveItem(key, item) {
         const { data } = this.state;
         let reslut = data.filter((Item, index) => { return key !== index })
         this.setState({ data: reslut })
         this.notify("tr", 3, "The item deleted successfully")
     }
 
+
+    RemoveItem(key, Item) {
+        const { Branchs } = this.state;
+
+        HtttpDeleteDefult("branch/" + Item.id + "").then((res) => {
+            if (res) {
+                let reslut = Branchs.filter((Item, index) => { return key !== index })
+                this.setState({ Branchs: reslut })
+                displayToast('done', true);
+
+            }
+        })
+    }
+
+
+    componentDidMount() {
+        const { OwnerProfile } = this.props;
+        if (OwnerProfile && OwnerProfile.brands.length > 0) {
+            this.setState({ brands: OwnerProfile.brands, selectedBrand: OwnerProfile.brands[0] }, () => {
+                this.selectedBrand(OwnerProfile.brands[0])
+            })
+        }
+    }
+
+    selectedBrand(Item) {
+        this.setState({ selectedBrand: Item })
+        HtttpGetDefult('brand/' + Item.id + '').then((res) => {
+            console.log(res)
+            this.setState({ Branchs: res.branches })
+        })
+    }
+
+    changeEditInput(Input, val) {
+        switch (Input) {
+            case 'name':
+                this.setState({
+                    selectedBranch: {
+                        ...this.state.selectedBranch,
+                        name: val
+                    }
+                })
+                break;
+        }
+
+    }
+
+
+    changeNewInput(Input, val) {
+        switch (Input) {
+            case 'name':
+                this.setState({
+                    newBranch: {
+                        ...this.state.newBranch,
+                        name: val
+                    }
+                })
+                break;
+        }
+
+    }
+    addNewBranch() {
+        const { newBranch, Branchs, selectedBrand } = this.state;
+        this.setState({ addMode: false, editMode: false, detailsMode: false });
+        newBranch.BrandId = selectedBrand.id;
+        HtttpPostDefult("branch/create", newBranch).then((res) => {
+            if (res) {
+                Branchs.push(res);
+                this.setState({ Branchs: Branchs });
+                displayToast('done', true);
+            }
+        })
+    }
+
+    EditBranch() {
+        const { selectedBranch, selectedBranchIndex, Branchs } = this.state;
+        this.setState({ addMode: false, editMode: false, detailsMode: false });
+        HtttpPutDefult("branch/" + selectedBranch.id + "", selectedBranch).then((res) => {
+            if (res) {
+                Branchs[selectedBranchIndex] = selectedBranch;
+                this.setState({ Branchs: Branchs });
+                displayToast('done', true);
+            }
+        })
+
+    }
+
     render() {
-        const { data, editMode, addMode, detailsMode, selectedBrand } = this.state;
+        const { editMode, addMode, detailsMode, selectedBrand, brands, Branchs, selectedBranch } = this.state;
         return (
             <div className="content Branches">
                 <div className="react-notification-alert-container">
@@ -186,6 +183,14 @@ class Branches extends React.Component {
 
                 <Col md="11">
                     <Card>
+                        {brands &&
+                            <Row>
+                                <FormGroup className="dropDownContainer">
+                                    <h2 className="title">{i18n.t("Branches.SelectBrand")}</h2>
+                                    <DropDown label={i18n.t("Brands.title")} items={brands} onClick={(val) => { this.selectedBrand(val) }} selctedItem={selectedBrand} />
+                                </FormGroup>
+                            </Row>
+                        }
                         {!editMode && !addMode && !detailsMode &&
                             <React.Fragment>
                                 <CardHeader>
@@ -193,43 +198,46 @@ class Branches extends React.Component {
                                         <Col>
                                             <h2 className="title">{i18n.t("Branches.title")}</h2>
                                         </Col>
-                                        <Col className="AddContainer">
+                                        {Branchs && Branchs.length > 0 && <Col className="AddContainer">
                                             <i className="fa fa-plus-circle" id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
                                             <UncontrolledTooltip placement="right" target="Add">{i18n.t("Branches.add")}</UncontrolledTooltip>
                                         </Col>
+                                        }
                                     </Row>
                                 </CardHeader>
                                 <CardBody>
-                                    <Table className="tablesorter" responsive hover>
-                                        <thead className="text-primary">
-                                            <tr>
-                                                <th className="text-center">{i18n.t("Branches.Name")}</th>
-                                                <th className="text-center">{i18n.t("Branches.address")}</th>
-                                                <th className="text-center">{i18n.t("Branches.brandName")}</th>
-                                                <th className="text-center">{i18n.t("Branches.brandPackage")}</th>
-                                                <th className="text-center">{i18n.t("Branches.mainPackage")}</th>
-                                                <th className="text-center">{i18n.t("Branches.Edit")}</th>
-                                                <th className="text-center">{i18n.t("Branches.Details")}</th>
-                                                <th className="text-center">{i18n.t("Branches.Delete")}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {data.map((Item, key) => {
-                                                return (
-                                                    <tr key={key}>
-                                                        <td className="text-center">{Item.name}</td>
-                                                        <td className="text-center">{Item.address}</td>
-                                                        <td className="text-center">{Item.brandName}</td>
-                                                        <td className="text-center">{Item.brandPackage}</td>
-                                                        <td className="text-center">{Item.mainPackage}</td>
-                                                        <td className="text-center"><i className="fa fa-edit" onClick={() => { this.setState({ addMode: false, editMode: true, selectedBrand: Item, detailsMode: false }) }} /></td>
-                                                        <td className="text-center"><i className="fas fa-info-circle" onClick={() => this.setState({ addMode: false, editMode: false, selectedBrand: Item, detailsMode: true })} /></td>
-                                                        <td className="text-center"><i className="fas fa-trash-alt" onClick={() => this.RemoveItem(key)} /></td>
+                                    {
+                                        Branchs && Branchs.length > 0 ?
+                                            <Table className="tablesorter" responsive hover>
+                                                <thead className="text-primary">
+                                                    <tr>
+                                                        <th className="text-center">{i18n.t("global.ID")}</th>
+                                                        <th className="text-center">{i18n.t("Branches.Name")}</th>
+                                                        <th className="text-center">{i18n.t("Branches.brandName")}</th>
+                                                        <th className="text-center">{i18n.t("Branches.Edit")}</th>
+                                                        <th className="text-center">{i18n.t("Branches.Details")}</th>
+                                                        <th className="text-center">{i18n.t("Branches.Delete")}</th>
                                                     </tr>
-                                                )
-                                            })}
-                                        </tbody>
-                                    </Table>
+                                                </thead>
+                                                <tbody>
+                                                    {Branchs && Branchs.map((Item, key) => {
+                                                        return (
+                                                            <tr key={key}>
+                                                                <td className="text-center">{Item.id}</td>
+                                                                <td className="text-center">{Item.name}</td>
+                                                                <td className="text-center">{selectedBrand.name}</td>
+                                                                <td className="text-center"><i className="fa fa-edit" onClick={() => { this.setState({ addMode: false, editMode: true, selectedBranch: Item, detailsMode: false, selectedBranchIndex: key }) }} /></td>
+                                                                <td className="text-center"><i className="fas fa-info-circle" onClick={() => this.setState({ addMode: false, editMode: false, selectedBranch: Item, detailsMode: true })} /></td>
+                                                                <td className="text-center"><i className="fas fa-trash-alt" onClick={() => this.RemoveItem(key, Item)} /></td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </Table> :
+
+                                            <h2 className="noResult text-center">{i18n.t("global.noResult")}</h2>
+                                    }
+
                                 </CardBody>
                             </React.Fragment>
                         }
@@ -247,51 +255,24 @@ class Branches extends React.Component {
                                     <Form>
                                         <Row form>
                                             <Col md={6}>
-                                                <InputWithText type="email" label="Name" placeholder={'Enter  Name'} onChange={(val) => { console.log(val) }} />
-                                            </Col>
-                                            <Col md={6}>
-                                                <FormGroup>
-                                                    <label for="examplePassword">Main Packge</label>
-                                                    <Input type="text" name="email" id="exampleEmail" placeholder="with a placeholder" />
-                                                </FormGroup>
+                                                <InputWithText type="text" label={i18n.t("Branches.Name")} placeholder={i18n.t("Branches.NamePlacholder")} onChange={(val) => { this.changeNewInput('name', val) }} />
                                             </Col>
                                         </Row>
-                                        <FormGroup>
-                                            <label for="exampleAddress">Address</label>
-                                            <Input type="text" name="address" id="exampleAddress" placeholder="1234 Main St" />
-                                        </FormGroup>
-                                        <Row form>
-                                            <Col md={6}>
-                                                <FormGroup>
-                                                    <label for="exampleCity">City</label>
-                                                    <Input type="text" name="city" id="exampleCity" />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col md={4}>
-                                                <FormGroup>
-                                                    <label for="exampleState">State</label>
-                                                    <Input type="text" name="state" id="exampleState" />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col md={2}>
-                                                <FormGroup>
-                                                    <label for="exampleZip">Zip</label>
-                                                    <Input type="text" name="zip" id="exampleZip" />
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-                                        <Button onClick={() => this.setState({ addMode: false, editMode: false, detailsMode: false })}>Submit</Button>
+                                        <Button onClick={() => this.addNewBranch()}>{i18n.t("global.submit")}</Button>
+                                        <Button onClick={() => this.setState({ addMode: false, editMode: false, detailsMode: false })}>{i18n.t("global.cancel")}</Button>
+
                                     </Form>
                                 </CardBody>
                             </React.Fragment>
                         }
+
                         {editMode && !addMode && !detailsMode &&
                             // Edit Mode
                             <React.Fragment>
                                 <CardHeader>
                                     <Row>
                                         <Col>
-                                            <h2 className="title">Edit Branch</h2>
+                                            <h2 className="title">{i18n.t("Branches.editBranch")}</h2>
                                         </Col>
                                     </Row>
                                 </CardHeader>
@@ -299,43 +280,11 @@ class Branches extends React.Component {
                                     <Form>
                                         <Row form>
                                             <Col md={6}>
-                                                <FormGroup>
-                                                    <label for="title">Name</label>
-                                                    <Input type="email" name="email" id="exampleEmail" placeholder="with a placeholder" value={this.state.selectedBrand.name} />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col md={6}>
-                                                <FormGroup>
-                                                    <label for="examplePassword"> Main Packge</label>
-                                                    <Input type="text" name="email" id="exampleEmail" placeholder="with a placeholder" value={this.state.selectedBrand.assignedPackage} />
-                                                </FormGroup>
+                                                <InputWithText type="text" label={i18n.t("Branches.Name")} placeholder={i18n.t("Branches.NamePlacholder")} onChange={(val) => { this.changeEditInput('name', val) }} value={selectedBranch.name} />
                                             </Col>
                                         </Row>
-                                        <FormGroup>
-                                            <label for="exampleAddress">Address</label>
-                                            <Input type="text" name="address" id="exampleAddress" placeholder="1234 Main St" value={this.state.selectedBrand.address} />
-                                        </FormGroup>
-                                        <Row form>
-                                            <Col md={6}>
-                                                <FormGroup>
-                                                    <label for="exampleCity">City</label>
-                                                    <Input type="text" name="city" id="exampleCity" />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col md={4}>
-                                                <FormGroup>
-                                                    <label for="exampleState">State</label>
-                                                    <Input type="text" name="state" id="exampleState" />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col md={2}>
-                                                <FormGroup>
-                                                    <label for="exampleZip">Zip</label>
-                                                    <Input type="text" name="zip" id="exampleZip" />
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-                                        <Button onClick={() => this.setState({ addMode: false, editMode: false, detailsMode: false })}>Submit</Button>
+                                        <Button onClick={() => this.EditBranch()}>{i18n.t("global.submit")}</Button>
+                                        <Button onClick={() => this.setState({ addMode: false, editMode: false, detailsMode: false })}>{i18n.t("global.cancel")}</Button>
                                     </Form>
                                 </CardBody>
                             </React.Fragment>
@@ -361,32 +310,15 @@ class Branches extends React.Component {
                                         <Row>
                                             <Col size="6">
                                                 <label className="item">{i18n.t("Branches.Name")}:</label>
-                                                <label className="value">{selectedBrand.name}</label>
+                                                <label className="value">{selectedBranch.name}</label>
                                             </Col>
                                             <Col size="6">
                                                 <label className="item">{i18n.t("Branches.BrandName")}:</label>
-                                                <label className="value">{selectedBrand.brandName}</label>
+                                                <label className="value">{selectedBrand.name}</label>
                                             </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col size="6">
-                                                <label className="item">{i18n.t("Branches.BrandPackge")}:</label>
-                                                <label className="value">{selectedBrand.brandPackage}</label>
-                                            </Col>
-                                            <Col size="6">
-                                                <label className="item">{i18n.t("Branches.BranchPackge")}:</label>
-                                                <label className="value">{selectedBrand.mainPackage}</label>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col size="6">
-                                                <label className="item">{i18n.t("Branches.Address")}:</label>
-                                                <label className="value">{selectedBrand.address}</label>
-                                            </Col>
-
                                         </Row>
 
-                                        <hr className="sperator" />
+                                        {/* <hr className="sperator" />
                                     </div>
                                     <Row>
                                         <Col>
@@ -441,8 +373,8 @@ class Branches extends React.Component {
 
                                             </tbody>
                                         </Table>
+                                     */}
                                     </div>
-
 
                                 </CardBody>
                             </React.Fragment>
@@ -456,4 +388,18 @@ class Branches extends React.Component {
 }
 
 
-export default Branches;
+const mapStateToProps = (state) => {
+    return {
+        OwnerProfile: state.ProfileState.OwnerProfile,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        storeProfile: (val) => dispatch(StoreProfile(val)),
+    };
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Branches);
+

@@ -1,32 +1,38 @@
 import React from 'react';
 import {
-    Col, Row, Button, Form, FormGroup, Input, Card,
+    Col, Row, Button, Form, Card,
     CardHeader,
     CardBody,
 } from 'reactstrap';
 import './CompanyProfileStyle.scss';
 import i18n from '../../i18n';
 import { InputWithText } from '../../components/ComponentModule'
-
+import { connect } from 'react-redux';
+import { HtttpPutDefult } from '../../actions/httpClient';
+import { StoreProfile } from '../../store/actions/ProfileAction';
+import { displayToast } from '../../globals/globals';
 class CompanyProfile extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             profileObject: {
-                profilePic: require("../../../src/assets/img/default-avatar.jpg"),
-                Name: "Ahmed Shehab",
-                Email: "",
-                UserName: "AhmedShehab3321",
-                Password: "",
-                Address: "",
-                Contact: "",
-                ContactPersonal: ""
+                address: "",
+                contact: "",
+                contactPerson: "",
+                logo: "",
+                name: "",
+                password: "",
+                username: "",
             }
         }
     }
 
 
+    componentDidMount() {
+        const { OwnerProfile } = this.props;
+        this.setState({ profileObject: OwnerProfile });
+    }
 
     changePhoto(event) {
         event.preventDefault();
@@ -47,51 +53,50 @@ class CompanyProfile extends React.Component {
 
 
     submit() {
-        const { profileObject } = this.state
+        const { profileObject } = this.state;
+        const { storeProfile } = this.props;
         if (this.checkValidation()) {
-            console.log(profileObject)
+            HtttpPutDefult('customer/1', profileObject).then((res) => {
+                if (res) {
+                    storeProfile(profileObject);
+                    displayToast('done', true);
+                }
+            })
+
         }
     }
 
     changeInput(Input, val) {
         switch (Input) {
-            case 'Email':
+            case 'password':
                 this.setState({
                     profileObject: {
                         ...this.state.profileObject,
-                        Email: val
+                        password: val
                     }
                 })
                 break;
-            case 'Password':
+            case 'address':
                 this.setState({
                     profileObject: {
                         ...this.state.profileObject,
-                        Password: val
+                        address: val
                     }
                 })
                 break;
-            case 'Address':
+            case 'contact':
                 this.setState({
                     profileObject: {
                         ...this.state.profileObject,
-                        Address: val
+                        contact: val
                     }
                 })
                 break;
-            case 'Contact':
+            case 'contactPersonal':
                 this.setState({
                     profileObject: {
                         ...this.state.profileObject,
-                        Contact: val
-                    }
-                })
-                break;
-            case 'ContactPersonal':
-                this.setState({
-                    profileObject: {
-                        ...this.state.profileObject,
-                        ContactPersonal: val
+                        contactPersonal: val
                     }
                 })
                 break;
@@ -99,8 +104,10 @@ class CompanyProfile extends React.Component {
 
     }
 
+
+
     render() {
-        const { profilePic, Name, Email, UserName, Password, Address, Contact, ContactPersonal } = this.state.profileObject;
+        const { name, username, password, address, contact, contactPerson } = this.state.profileObject;
         return (
             <div className="content CompanyProfile">
                 <Col md="11">
@@ -111,39 +118,34 @@ class CompanyProfile extends React.Component {
                         <CardBody>
                             <Form>
                                 <Row>
-                                    <Col md={12}>
+                                    {/* <Col md={12}>
                                         <FormGroup className="profilePicContainer">
                                             <label>{i18n.t("CompanyProfile.Logo")}</label>
                                             <Input ref="file" type="file" name="file" onChange={this.changePhoto.bind(this)} />
                                             <img alt="" src={profilePic} />
                                         </FormGroup>
+                                    </Col> */}
+                                    <Col md={6}>
+                                        <InputWithText type="text" label={i18n.t("CompanyProfile.Name")} placeholder={i18n.t("CompanyProfile.NamePlacholder")} value={name} disabled />
                                     </Col>
                                     <Col md={6}>
-                                        <InputWithText type="text" label={i18n.t("CompanyProfile.Name")} placeholder={i18n.t("CompanyProfile.NamePlacholder")} value={Name} disabled />
-                                    </Col>
-                                    <Col md={6}>
-                                        <InputWithText type="email" label={i18n.t("CompanyProfile.Email")} placeholder={i18n.t("CompanyProfile.EmailPlacholder")} onChange={(val) => this.changeInput("Email", val)} value={Email} />
+                                        <InputWithText type="text" label={i18n.t("CompanyProfile.UserName")} placeholder={i18n.t("CompanyProfile.UserNamePlacholder")} disabled value={username} />
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col md={6}>
-                                        <InputWithText type="text" label={i18n.t("CompanyProfile.UserName")} placeholder={i18n.t("CompanyProfile.UserNamePlacholder")} disabled value={UserName} />
+                                        <InputWithText type="password" label={i18n.t("CompanyProfile.Password")} placeholder={"********"} onChange={(val) => this.changeInput("password", val)} value={password} />
                                     </Col>
                                     <Col md={6}>
-                                        <InputWithText type="password" label={i18n.t("CompanyProfile.Password")} placeholder={"********"} onChange={(val) => this.changeInput("Password", val)} value={Password} />
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col md={12}>
-                                        <InputWithText type="text" label={i18n.t("CompanyProfile.Address")} placeholder={i18n.t("CompanyProfile.AddressPlacholder")} onChange={(val) => this.changeInput("Address", val)} value={Address} />
+                                        <InputWithText type="text" label={i18n.t("CompanyProfile.Address")} placeholder={i18n.t("CompanyProfile.AddressPlacholder")} onChange={(val) => this.changeInput("address", val)} value={address} />
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col md={6}>
-                                        <InputWithText type="text" label={i18n.t("CompanyProfile.Contact")} placeholder={"01222****"} onChange={(val) => this.changeInput("Contact", val)} value={Contact} />
+                                        <InputWithText type="text" label={i18n.t("CompanyProfile.Contact")} placeholder={"01222****"} onChange={(val) => this.changeInput("contact", val)} value={contact} />
                                     </Col>
                                     <Col md={6}>
-                                        <InputWithText type="text" label={i18n.t("CompanyProfile.ContactPersonal")} placeholder={"01222****"} onChange={(val) => this.changeInput("ContactPersonal", val)} value={ContactPersonal} />
+                                        <InputWithText type="text" label={i18n.t("CompanyProfile.ContactPersonal")} placeholder={"01222****"} onChange={(val) => this.changeInput("contactPersonal", val)} value={contactPerson} />
                                     </Col>
                                 </Row>
                                 <Button onClick={() => { this.submit() }}>{i18n.t("global.submit")}</Button>
@@ -157,4 +159,19 @@ class CompanyProfile extends React.Component {
 }
 
 
-export default CompanyProfile;
+const mapStateToProps = (state) => {
+    return {
+        OwnerProfile: state.ProfileState.OwnerProfile,
+    };
+};
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        storeProfile: (val) => dispatch(StoreProfile(val)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyProfile);
+
+

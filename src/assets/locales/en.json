@@ -1,7 +1,10 @@
 {
   "global": {
     "submit": "Submit",
-    "Back": "Back"
+    "Back": "Back",
+    "ID": "ID",
+    "cancel": "cancel",
+    "noResult": "No Result"
   },
   "Login": {
     "UserName": "User Name",
@@ -67,6 +70,11 @@
     "IP": "IP",
     "BrandName": "BrandName",
     "BrandPackge": "BrandPackge",
-    "BranchPackge": "BranchPackge"
+    "BranchPackge": "BranchPackge",
+    "SelectBrand": "Select Brand"
+  },
+  "Admins": {
+    "title": "Admins",
+    "Role": "Role"
   }
 }

@@ -3,14 +3,14 @@ import {
 } from '../constants/Profile';
 
 const initialState = {
-    OwnerProfile: {},
+    OwnerProfile: null,
 };
 
 const ProfileReducer = (state = initialState, action) => {
     if (action.type === STORE_PROFILE) {
         return {
             ...state,
-            OwnerProfile: action.payload.OwnerProfile,
+            OwnerProfile: action.payload.Profile,
         };
     }
     return state;

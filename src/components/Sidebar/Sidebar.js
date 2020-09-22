@@ -5,6 +5,7 @@ import React from "react";
 import { NavLink, withRouter } from "react-router-dom";
 import { Nav, UncontrolledCollapse } from "reactstrap";
 import './SidebarStyle.scss';
+import { connect } from 'react-redux';
 
 
 let ps;
@@ -15,7 +16,8 @@ class Sidebar extends React.Component {
     super(props);
     this.activeRoute.bind(this);
     this.state = {
-      collapseIcon: false
+      collapseIcon: false,
+      routes: this.props.routes
     }
   }
 
@@ -31,6 +33,8 @@ class Sidebar extends React.Component {
         suppressScrollY: false
       });
     }
+    // this.checkPrivilage();
+
   }
 
 
@@ -45,12 +49,37 @@ class Sidebar extends React.Component {
   }
 
 
+  // checkPrivilage() {
+  //   const { routes, OwnerProfile } = this.props;
+  //   let routesResult = [];
+
+  //   routes.map((Item) => {
+  //     debugger
+  //     if (Item.role && Item.role.indexOf(OwnerProfile.role)) {
+  //       routesResult.push(Item);
+  //     }
+  //     if (Item.subs) {
+  //       Item.subs.map((Sub) => {
+  //         if (Sub.role.indexOf(OwnerProfile.role)) {
+  //           routesResult.push(Sub);
+  //         }
+  //       })
+  //     }
+  //   })
+
+  //   this.setState({ routes: routesResult })
+
+
+
+  // }
+
+
   linkOnClick = () => {
     document.documentElement.classList.remove("nav-open");
   };
 
   collapseToIcon() {
-    const { collapseIcon } = this.state;
+    const { collapseIcon, OwnerProfile } = this.state;
     this.setState({ collapseIcon: !collapseIcon }, () => this.checkCurrentScreen())
   }
 
@@ -73,14 +102,14 @@ class Sidebar extends React.Component {
 
 
   render() {
-    const { bgColor, routes, logo } = this.props;
+    const { bgColor, routes, OwnerProfile } = this.props;
     const { collapseIcon } = this.state;
     return (
       <div className="sidebar" data={bgColor} style={collapseIcon ? { width: '5%' } : null}>
         <div className="backIconContainer" onClick={() => { this.collapseToIcon() }}>
           {!DeviceWidth.matches && collapseIcon ? <i className="fa fa-arrow-circle-right"></i> : <i className="fa fa-arrow-circle-left"></i>}
         </div>
-        <div className="sidebar-wrapper" ref="sidebar">
+        <div className="sidebar-wrapper" ref="sidebar" style={collapseIcon ? { overflowX: "hidden" } : null}>
           <Nav style={collapseIcon ? { marginTop: 50 } : null}>
             {routes.map((prop, key) => {
               if (prop.redirect) return null;
@@ -88,27 +117,28 @@ class Sidebar extends React.Component {
                 <li
                   className={
                     prop.subs ? null : this.activeRoute(prop.path) +
-                      (prop.pro ? " active-pro" : "")
+                      (prop.pro ? " active-pro" : "") +
+                      (prop.role && OwnerProfile && prop.role.indexOf(OwnerProfile.role) != -1 ? "" : "hide")
                   }
                   key={key}
                 >
                   <NavLink
                     to={prop.subs ? prop.subs[0].path : prop.path}
-                    className="nav-link"
+                    className={"nav-link"}
                     activeClassName="active"
                   >
                     <i className={prop.icon} />
-
                     <p id={prop.name.split(" ")[0]} className={collapseIcon ? "hideTitle" : null}>{prop.name}</p>
                   </NavLink>
                   {
                     prop.subs && prop.subs.map((item, ItemKey) => {
+
                       return (
                         <UncontrolledCollapse toggler={prop.name.split(" ")[0]} style={{ background: '#737373' }}>
                           <li
                             className={
                               item.subSubs ? null : this.activeRoute(item.path) +
-                                (prop.pro ? " active-pro" : "")
+                                (prop.pro ? " active-pro" : "") + (item.role && OwnerProfile && item.role.indexOf(OwnerProfile.role) != -1 ? "" : "hide")
                             }
                             key={ItemKey}
                           >
@@ -119,7 +149,7 @@ class Sidebar extends React.Component {
                               onClick={this.props.toggleSidebar}
                             >
                               <i className={item.icon} />
-                              <p id={item.name.split(" ")[0]} className={collapseIcon ? "hideTitle" : null}>{item.name}</p>
+                              <p id={item.name.split(" ")[0]} className={collapseIcon ? "hideSubTitle" : null}>{item.name}</p>
                             </NavLink>
                             {
                               item.subSubs && item.subSubs.map((elm, index) => {
@@ -128,7 +158,8 @@ class Sidebar extends React.Component {
                                     <li
                                       className={
                                         this.activeRoute(elm.path) +
-                                        (prop.pro ? " active-pro" : "")
+                                        (prop.pro ? " active-pro" : "") +
+                                        (elm.role && OwnerProfile && elm.role.indexOf(OwnerProfile.role) != -1 ? "" : "hide")
                                       }
                                       key={index}
                                     >
@@ -139,7 +170,7 @@ class Sidebar extends React.Component {
                                         onClick={this.props.toggleSidebar}
                                       >
                                         <i className={elm.icon} />
-                                        <p className={collapseIcon ? "hideTitle" : null}>{elm.name}</p>
+                                        <p className={collapseIcon ? "hideSubTitle" : null}>{elm.name}</p>
                                       </NavLink>
                                     </li>
                                   </UncontrolledCollapse>
@@ -172,4 +203,15 @@ Sidebar.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.object),
 };
 
-export default withRouter(Sidebar);
+
+const mapStateToProps = (state) => {
+  return {
+    OwnerProfile: state.ProfileState.OwnerProfile,
+  };
+};
+
+
+
+
+export default connect(mapStateToProps, null)(withRouter(Sidebar));
+

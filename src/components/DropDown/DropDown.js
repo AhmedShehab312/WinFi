@@ -12,7 +12,7 @@ const DropDown = ({ label, items, selctedItem, onClick }) => {
             <DropdownMenu>
                 {
                     items.map((Item, key) => {
-                        return <DropdownItem key={key} onClick={() => { onClick(Item) }} active={selctedItem && Item.key == selctedItem.key}>{Item.name}</DropdownItem>
+                        return <DropdownItem key={key} onClick={() => { onClick(Item) }} active={selctedItem && Item.id == selctedItem.id}>{Item.name}</DropdownItem>
                     })
                 }
             </DropdownMenu>

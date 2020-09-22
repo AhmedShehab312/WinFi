@@ -5,8 +5,10 @@ import { Button } from 'reactstrap';
 import { InputWithText } from '../../components/ComponentModule';
 import i18n from '../../i18n';
 import './LoginStyle.scss';
-
-
+import { HtttpGetDefult } from '../../actions/httpClient';
+import { connect } from 'react-redux';
+import { StoreProfile } from '../../store/actions/ProfileAction';
+import { setLoggedIn } from '../../globals/globals';
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -21,9 +23,15 @@ class Login extends React.Component {
     }
 
     submit() {
-        const { history } = this.props;
-        console.log('d');
-        history.push('/dashboard');
+        const { history, storeProfile } = this.props;
+        HtttpGetDefult('customer/1').then((res) => {
+            if (res) {
+                res.role = 'SUPER';
+                storeProfile(res);
+                history.push('/dashboard');
+                setLoggedIn(true)
+            }
+        })
     }
 
     render() {
@@ -47,4 +55,13 @@ class Login extends React.Component {
 
 }
 
-export default withRouter(Login);
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        storeProfile: (val) => dispatch(StoreProfile(val)),
+    };
+};
+
+export default connect(null, mapDispatchToProps)(withRouter(Login));
+
+

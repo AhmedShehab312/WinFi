@@ -7,14 +7,17 @@ import {
     CardHeader,
     CardBody,
     UncontrolledTooltip,
-    Form, FormGroup, Input,
+    Form,
     Button
 } from 'reactstrap';
 import './BrandsStyle.scss';
 import NotificationAlert from "react-notification-alert";
 import { InputWithText, DropDown } from '../../components/ComponentModule'
-import { HtttpGetDefult, HtttpPostDefult } from '../../actions/httpClient';
+import { HtttpDeleteDefult, HtttpPostDefult, HtttpPutDefult } from '../../actions/httpClient';
 import i18n from '../../i18n';
+import { connect } from 'react-redux';
+import { StoreProfile } from '../../store/actions/ProfileAction';
+import { displayToast } from '../../globals/globals';
 
 class Brands extends React.Component {
     constructor(props) {
@@ -23,56 +26,36 @@ class Brands extends React.Component {
             editMode: false,
             addMode: false,
             detailsMode: false,
+            selectedBrandIndex: null,
             data: [
                 {
-                    id: '1',
-                    name: 'StarBuks',
-                    address: "Cairo",
-                    assignedPackage: { name: "A", key: 1 },
-                    employeesNo: '40',
-                    usedFrompackage: {
-                        totalSMS: '20',
-                        totalNotification: '65',
-                        totalEmails: '22',
-                        renewalDate: '12-2-2021'
-                    }
+                    id: '',
+                    name: '',
+                    // address: "Cairo",
+                    // assignedPackage: { name: "A", key: 1 },
+                    // usedFrompackage: {
+                    //     totalSMS: '20',
+                    //     totalNotification: '65',
+                    //     totalEmails: '22',
+                    //     renewalDate: '12-2-2021'
+                    // }
                 },
-                {
-                    id: '2',
-                    name: 'Macdonald',
-                    address: "Alex",
-                    assignedPackage: { name: "B", key: 1 },
-                    employeesNo: '80',
-                    usedFrompackage: {
-                        totalSMS: '12',
-                        totalNotification: '25',
-                        totalEmails: '23',
-                        renewalDate: '12-4-2021'
-                    }
-                },
-
             ],
             selectedBrand: null,
             newBrand: {
-                id: '1',
-                name: '',
-                address: "",
-                logo: require("../../../src/assets/img/default-avatar.jpg"),
-                assignedPackage: null,
-                usedFrompackage: {
-                    totalSMS: '20',
-                    totalNotification: '65',
-                    totalEmails: '22',
-                    renewalDate: '12-2-2021'
-                }
+                name: "kentucky",
+                logo: "",
+                CustomerId: "1",
+                PackageId: null
             },
             Packges: [
                 { name: "A", key: 1 },
                 { name: "B", key: 2 }
-            ]
-
+            ],
         }
+
     }
+    profileData;
 
     notify = (place, color, msg) => {
         // var color = Math.floor(Math.random() * 5 + 1);
@@ -113,27 +96,17 @@ class Brands extends React.Component {
         this.refs.notificationAlert.notificationAlert(options);
     };
 
-    RemoveItem(key) {
-        const { data } = this.state;
-        let reslut = data.filter((Item, index) => { return key !== index })
-        this.setState({ data: reslut })
-        this.notify("tr", 3, "The item deleted successfully")
-    }
+
 
     componentDidMount() {
-        let body = {
-            "name": "Starbucks",
-            "username": "Starbucks",
-            "password": "Starbucks",
-            "logo": "",
-            "contact": "0100000000",
-            "contactPerson": "Mohamed Ahmed",
-            "address": "Cairo"
+        const { OwnerProfile } = this.props;
+        if (OwnerProfile) {
+            this.profileData = OwnerProfile;
+            this.setState({ data: OwnerProfile.brands })
         }
-        HtttpGetDefult('customer/1').then(result => {
-            console.log(result)
-        })
     }
+
+
 
 
     changeNewInput(Input, val) {
@@ -146,22 +119,22 @@ class Brands extends React.Component {
                     }
                 })
                 break;
-            case 'address':
-                this.setState({
-                    newBrand: {
-                        ...this.state.newBrand,
-                        address: val
-                    }
-                })
-                break;
-            case 'assignedPackage':
-                this.setState({
-                    newBrand: {
-                        ...this.state.newBrand,
-                        assignedPackage: val
-                    }
-                })
-                break;
+            // case 'address':
+            //     this.setState({
+            //         newBrand: {
+            //             ...this.state.newBrand,
+            //             address: val
+            //         }
+            //     })
+            //     break;
+            // case 'assignedPackage':
+            //     this.setState({
+            //         newBrand: {
+            //             ...this.state.newBrand,
+            //             assignedPackage: val
+            //         }
+            //     })
+            //     break;
         }
 
     }
@@ -214,11 +187,48 @@ class Brands extends React.Component {
     }
 
     addNewBrand() {
+        const { newBrand } = this.state;
+        const { storeProfile } = this.props;
+
         this.setState({ addMode: false, editMode: false, detailsMode: false });
+        HtttpPostDefult("brand/create", newBrand).then((res) => {
+            if (res) {
+                this.profileData.brands.push(res);
+                storeProfile(this.profileData);
+                this.setState({ data: this.profileData.brands });
+                displayToast('done', true);
+            }
+        })
     }
 
     editBrand() {
-        this.setState({ addMode: false, editMode: false, detailsMode: false })
+        const { selectedBrandIndex, selectedBrand } = this.state;
+        const { storeProfile } = this.props;
+        this.setState({ addMode: false, editMode: false, detailsMode: false });
+        HtttpPutDefult("brand/" + selectedBrand.id + "", selectedBrand).then((res) => {
+            if (res) {
+                this.profileData.brands[selectedBrandIndex] = selectedBrand;
+                storeProfile(this.profileData);
+                this.setState({ data: this.profileData.brands });
+                displayToast('done', true);
+            }
+        })
+    }
+
+    RemoveItem(key, Item) {
+        const { data } = this.state;
+        const { storeProfile } = this.props;
+
+        HtttpDeleteDefult("brand/" + Item.id + "").then((res) => {
+            if (res) {
+                let reslut = data.filter((Item, index) => { return key !== index })
+                this.setState({ data: reslut })
+                this.profileData.brands = reslut
+                storeProfile(this.profileData);
+                displayToast('done', true);
+
+            }
+        })
     }
 
     render() {
@@ -238,18 +248,22 @@ class Brands extends React.Component {
                                         <Col>
                                             <h2 className="title">{i18n.t("Brands.title")}</h2>
                                         </Col>
-                                        <Col className="AddContainer">
-                                            <i className="fa fa-plus-circle" id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
-                                            <UncontrolledTooltip placement="right" target="Add">{i18n.t("Brands.add")}</UncontrolledTooltip>
-                                        </Col>
+
+                                        {data && data.length > 0 &&
+                                            <Col className="AddContainer">
+                                                <i className="fa fa-plus-circle" id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
+                                                <UncontrolledTooltip placement="right" target="Add">{i18n.t("Brands.add")}</UncontrolledTooltip>
+                                            </Col>}
                                     </Row>
                                 </CardHeader>
+
                                 <CardBody>
-                                    <Table className="tablesorter" responsive hover>
+                                    {data && data.length > 0 ? <Table className="tablesorter" responsive hover>
                                         <thead className="text-primary">
                                             <tr>
+                                                <th className="text-center">{i18n.t("global.ID")}</th>
                                                 <th className="text-center">{i18n.t("Brands.Name")}</th>
-                                                <th className="text-center">{i18n.t("Brands.Address")}</th>
+                                                {/* <th className="text-center">{i18n.t("Brands.Address")}</th> */}
                                                 <th className="text-center">{i18n.t("Brands.Package")}</th>
                                                 <th className="text-center">{i18n.t("Brands.Edit")}</th>
                                                 <th className="text-center">{i18n.t("Brands.Details")}</th>
@@ -260,20 +274,26 @@ class Brands extends React.Component {
                                             {data.map((Item, key) => {
                                                 return (
                                                     <tr key={key}>
+                                                        <td className="text-center">{Item.id}</td>
                                                         <td className="text-center">{Item.name}</td>
-                                                        <td className="text-center">{Item.address}</td>
-                                                        <td className="text-center">{Item.assignedPackage.name}</td>
-                                                        <td className="text-center"><i className="fa fa-edit" onClick={() => { this.setState({ addMode: false, editMode: true, selectedBrand: Item, detailsMode: false }) }} /></td>
-                                                        <td className="text-center"><i className="fas fa-info-circle" onClick={() => this.setState({ addMode: false, editMode: false, selectedBrand: Item, detailsMode: true })} /></td>
-                                                        <td className="text-center"><i className="fas fa-trash-alt" onClick={() => this.RemoveItem(key)} /></td>
+                                                        {/* <td className="text-center">{Item.address}</td> */}
+                                                        <td className="text-center">0</td>
+                                                        <td className="text-center"><i className="fa fa-edit" onClick={() => { this.setState({ addMode: false, editMode: true, selectedBrand: Item, detailsMode: false, selectedBrandIndex: key }) }} /></td>
+                                                        <td className="text-center"><i className="fas fa-info-circle" onClick={() => this.setState({ addMode: false, editMode: false, selectedBrand: Item, detailsMode: true, selectedBrandIndex: key })} /></td>
+                                                        <td className="text-center"><i className="fas fa-trash-alt" onClick={() => this.RemoveItem(key, Item)} /></td>
 
                                                     </tr>
                                                 )
                                             })}
 
                                         </tbody>
-                                    </Table>
+                                    </Table> :
+                                        <h2 className="noResult text-center">{i18n.t("global.noResult")}</h2>
+
+                                    }
                                 </CardBody>
+
+
                             </React.Fragment>
                         }
                         {!editMode && addMode && !detailsMode &&
@@ -288,7 +308,7 @@ class Brands extends React.Component {
                                 </CardHeader>
                                 <CardBody>
                                     <Form>
-                                        <Row>
+                                        {/* <Row>
                                             <Col md={12}>
                                                 <FormGroup className="logoContainer">
                                                     <label>{i18n.t("CompanyProfile.Logo")}</label>
@@ -296,21 +316,23 @@ class Brands extends React.Component {
                                                     <img alt="" src={newBrand.logo} />
                                                 </FormGroup>
                                             </Col>
-                                        </Row>
+                                        </Row> */}
                                         <Row >
                                             <Col md={6}>
                                                 <InputWithText type="text" label={i18n.t("Brands.Name")} placeholder={i18n.t("Brands.NamePlacholder")} onChange={(val) => { this.changeNewInput('name', val) }} />
                                             </Col>
-                                            <Col md={6}>
+                                            {/* <Col md={6}>
                                                 <FormGroup>
                                                     <DropDown label={i18n.t("Brands.Package")} items={Packges} onClick={(val) => { this.changeNewInput("assignedPackage", val) }} selctedItem={newBrand.assignedPackage} />
                                                 </FormGroup>
-                                            </Col>
-                                            <Col md={12}>
+                                            </Col> */}
+                                            {/* <Col md={6}>
                                                 <InputWithText type="text" label={i18n.t("Brands.Address")} placeholder={i18n.t("Brands.AddressPlacholder")} onChange={(val) => { this.changeNewInput('address', val) }} />
-                                            </Col>
+                                            </Col> */}
                                         </Row>
                                         <Button onClick={() => this.addNewBrand()}>{i18n.t("global.submit")}</Button>
+                                        <Button onClick={() => this.setState({ addMode: false, editMode: false, detailsMode: false })}>{i18n.t("global.cancel")}</Button>
+
                                     </Form>
                                 </CardBody>
                             </React.Fragment>
@@ -331,17 +353,14 @@ class Brands extends React.Component {
                                             <Col md={6}>
                                                 <InputWithText type="text" label={i18n.t("Brands.Name")} value={selectedBrand.name} placeholder={i18n.t("Brands.NamePlacholder")} onChange={(val) => { this.changeEditInput('name', val) }} />
                                             </Col>
-                                            <Col md={6}>
+                                            {/* <Col md={6}>
                                                 <FormGroup>
                                                     <DropDown label={i18n.t("Brands.Package")} items={Packges} onClick={(val) => { this.changeEditInput("assignedPackage", val) }} selctedItem={selectedBrand.assignedPackage} />
                                                 </FormGroup>
-                                            </Col>
-                                            <Col md={12}>
-                                                <InputWithText type="text" label={i18n.t("Brands.Address")} placeholder={i18n.t("Brands.AddressPlacholder")} onChange={(val) => { this.changeEditInput('address', val) }} value={selectedBrand.address} />
-                                            </Col>
-
+                                            </Col> */}
                                         </Row>
                                         <Button onClick={() => this.editBrand()}>{i18n.t("global.submit")}</Button>
+                                        <Button onClick={() => this.setState({ addMode: false, editMode: false, detailsMode: false })}>{i18n.t("global.cancel")}</Button>
                                     </Form>
                                 </CardBody>
                             </React.Fragment>
@@ -369,24 +388,25 @@ class Brands extends React.Component {
                                                 <label className="item">{i18n.t("Brands.Name")}:</label>
                                                 <label className="value">{selectedBrand.name}</label>
                                             </Col>
-                                            <Col size="6">
+                                            {/* <Col size="6">
                                                 <label className="item">{i18n.t("Brands.Address")}:</label>
                                                 <label className="value">{selectedBrand.address}</label>
-                                            </Col>
+                                            </Col> */}
                                         </Row>
-                                        <Row>
+                                        {/* <Row>
                                             <Col size="6">
                                                 <label className="item">{i18n.t("Brands.Package")}:</label>
                                                 <label className="value">{selectedBrand.assignedPackage.name}</label>
                                             </Col>
-                                        </Row>
-                                        <hr className="sperator" />
+                                        </Row> */}
+                                        {/* <hr className="sperator" /> */}
                                     </div>
-                                    <Row>
+                                    {/* <Row>
                                         <Col>
                                             <h3 className="Subtitle">{i18n.t("Brands.PackgeInfo")}</h3>
                                         </Col>
                                     </Row>
+                                    
                                     <div className="dataContainer">
                                         <Row>
                                             <Col size="6">
@@ -408,17 +428,33 @@ class Brands extends React.Component {
                                                 <label className="value">{selectedBrand.usedFrompackage.renewalDate}</label>
                                             </Col>
                                         </Row>
-                                    </div>
+                                    </div> */}
                                 </CardBody>
                             </React.Fragment>
                         }
 
                     </Card>
+
                 </Col>
+
             </div>
         );
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        OwnerProfile: state.ProfileState.OwnerProfile,
+    };
+};
 
-export default Brands;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        storeProfile: (val) => dispatch(StoreProfile(val)),
+    };
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Brands);
+
+

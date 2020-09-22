@@ -10,9 +10,16 @@
       color: aliceblue;
     }
   }
-
+  .hide {
+    display: none;
+  }
   .hideTitle {
-    color: #324479 !important;
+    color: #000000 !important;
+    opacity: 0.9;
+  }
+
+  .hideSubTitle {
+    color: #737373 !important;
     opacity: 0.9;
   }
 }

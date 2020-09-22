@@ -8,7 +8,7 @@ import SideMenu from "../../components/Sidebar/SideMenu";
 import routes from "../../routes";
 import { withRouter } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-
+import { getLoggedIn } from '../../globals/globals';
 var ps;
 
 class Admin extends React.Component {
@@ -33,8 +33,18 @@ class Admin extends React.Component {
         ps = new PerfectScrollbar(tables[i]);
       }
     }
+    if (!getLoggedIn()) {
+      this.props.history.push('/login');
+    }
   }
 
+
+
+  componentWillReceiveProps(props) {
+    if (!getLoggedIn()) {
+      props.history.push('/login');
+    }
+  }
 
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -50,6 +60,9 @@ class Admin extends React.Component {
     }
 
   }
+
+
+
 
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
