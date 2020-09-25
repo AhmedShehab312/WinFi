@@ -18,32 +18,32 @@ var SideMenu = [
         name: "Dashboard",
         icon: "fas fa-tachometer-alt",
         component: Dashboard,
-        role: ['SUPER', 'BRAND', 'BRANCH']
+        role: ['OWNER', 'SUPER', 'BRAND', 'BRANCH']
     },
     {
         name: "Configuration",
         icon: "fa fa-cogs",
-        role: ['SUPER', 'BRAND', 'BRANCH'],
+        role: ['OWNER', 'SUPER', 'BRAND', 'BRANCH'],
         subs: [{
             path: "/CompanyProfile",
             name: "Company Profile",
             icon: "fas fa-id-badge",
             component: CompanyProfile,
-            role: ['SUPER', 'BRAND', 'BRANCH']
+            role: ['OWNER', 'SUPER', 'BRAND', 'BRANCH']
         },
         {
             path: "/Brands",
             name: "Brands",
             icon: "fa fa-file",
             component: Brands,
-            role: ['SUPER', 'BRAND']
+            role: ['OWNER', 'SUPER', 'BRAND']
         },
         {
             path: "/Branches",
             name: "Branches",
             icon: "fa fa-code-branch",
             component: Branches,
-            role: ['SUPER', 'BRAND', 'BRANCH']
+            role: ['OWNER', 'SUPER', 'BRAND', 'BRANCH']
         },
         ]
     },
@@ -52,7 +52,7 @@ var SideMenu = [
         name: "Admins",
         icon: "fas fa-user",
         component: Admins,
-        role: ['SUPER']
+        role: ['OWNER']
     },
     {
         path: "/Reports",

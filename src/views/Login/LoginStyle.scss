@@ -1,6 +1,6 @@
 .LoginContainer {
   padding: 0 !important;
-  margin-top: 15%;
+  padding-top: 10% !important;
   .innerContainer {
     width: 30%;
     margin: auto;
@@ -25,5 +25,8 @@
         background: #36aaa7;
       }
     }
+  }
+  .form-check-input {
+    margin-top: 3px !important;
   }
 }

@@ -45,7 +45,7 @@ class Brands extends React.Component {
             newBrand: {
                 name: "kentucky",
                 logo: "",
-                CustomerId: "1",
+                CustomerId: this.props.OwnerProfile && this.props.OwnerProfile.CustomerId,
                 PackageId: null
             },
             Packges: [
@@ -105,9 +105,6 @@ class Brands extends React.Component {
             this.setState({ data: OwnerProfile.brands })
         }
     }
-
-
-
 
     changeNewInput(Input, val) {
         switch (Input) {
@@ -193,7 +190,10 @@ class Brands extends React.Component {
         this.setState({ addMode: false, editMode: false, detailsMode: false });
         HtttpPostDefult("brand/create", newBrand).then((res) => {
             if (res) {
-                this.profileData.brands.push(res);
+                debugger
+                console.log(this.profileData)
+                if (!this.profileData.brands) this.profileData.brands = res;
+                else this.profileData.brands.push(res);
                 storeProfile(this.profileData);
                 this.setState({ data: this.profileData.brands });
                 displayToast('done', true);
@@ -233,6 +233,7 @@ class Brands extends React.Component {
 
     render() {
         const { data, editMode, addMode, detailsMode, selectedBrand, Packges, newBrand } = this.state;
+        const { OwnerProfile } = this.props;
         return (
             <div className="content Brands">
                 <div className="react-notification-alert-container">
@@ -248,12 +249,12 @@ class Brands extends React.Component {
                                         <Col>
                                             <h2 className="title">{i18n.t("Brands.title")}</h2>
                                         </Col>
-
-                                        {data && data.length > 0 &&
+                                        {OwnerProfile && (OwnerProfile.role == "SUPER" || OwnerProfile.role == "OWNER") &&
                                             <Col className="AddContainer">
                                                 <i className="fa fa-plus-circle" id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
                                                 <UncontrolledTooltip placement="right" target="Add">{i18n.t("Brands.add")}</UncontrolledTooltip>
-                                            </Col>}
+                                            </Col>
+                                        }
                                     </Row>
                                 </CardHeader>
 
@@ -377,7 +378,7 @@ class Brands extends React.Component {
                                         </Col>
                                         <Col className="AddContainer">
                                             <i className="tim-icons  icon-minimal-right" id="up" onClick={() => { this.setState({ addMode: false, editMode: false, detailsMode: false }) }} />
-                                            <UncontrolledTooltip placement="right" target="up">{i18n.t("Brands.Back")}</UncontrolledTooltip>
+                                            <UncontrolledTooltip placement="right" target="up">{i18n.t("global.Back")}</UncontrolledTooltip>
                                         </Col>
                                     </Row>
                                 </CardHeader>

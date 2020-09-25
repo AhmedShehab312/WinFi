@@ -21,6 +21,8 @@ import {
 import { withRouter } from "react-router-dom";
 import logo from "assets/img/logo.webp";
 import './AdminNavStyle.scss';
+import { setLoggedIn } from '../../globals/globals';
+
 class AdminNavbar extends React.Component {
   constructor(props) {
     super(props);
@@ -69,6 +71,15 @@ class AdminNavbar extends React.Component {
       modalSearch: !this.state.modalSearch
     });
   };
+
+
+  LogOut() {
+    const { history } = this.props
+    setLoggedIn(false);
+    history.push('/');
+  }
+
+
   render() {
     return (
       <>
@@ -126,7 +137,7 @@ class AdminNavbar extends React.Component {
                     color="default"
                     data-toggle="dropdown"
                     nav
-                    onClick={e => e.preventDefault()}
+                    onClick={e => { e.preventDefault() }}
                   >
                     <div className="photo">
                       <img alt="..." src={require("assets/img/anime3.png")} />
@@ -142,7 +153,7 @@ class AdminNavbar extends React.Component {
                       <DropdownItem className="nav-item">Settings</DropdownItem>
                     </NavLink>
                     <DropdownItem divider tag="li" />
-                    <NavLink tag="li">
+                    <NavLink tag="li" onClick={() => { this.LogOut() }}>
                       <DropdownItem className="nav-item">Log out</DropdownItem>
                     </NavLink>
                   </DropdownMenu>

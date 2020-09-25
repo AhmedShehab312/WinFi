@@ -42,7 +42,6 @@ class Branches extends React.Component {
     }
 
     notify = (place, color, msg) => {
-        // var color = Math.floor(Math.random() * 5 + 1);
         var type;
         switch (color) {
             case 1:
@@ -112,10 +111,19 @@ class Branches extends React.Component {
     }
 
     selectedBrand(Item) {
+        const { OwnerProfile } = this.props;
+        let reslut;
         this.setState({ selectedBrand: Item })
         HtttpGetDefult('brand/' + Item.id + '').then((res) => {
             console.log(res)
-            this.setState({ Branchs: res.branches })
+            if (OwnerProfile.role == "BRANCH") {
+                reslut = res.branches.filter((Item) => { return Item.id == OwnerProfile.BranchId })
+            }
+            else {
+                reslut = res.branches
+            }
+            debugger
+            this.setState({ Branchs: reslut })
         })
     }
 
@@ -175,6 +183,7 @@ class Branches extends React.Component {
 
     render() {
         const { editMode, addMode, detailsMode, selectedBrand, brands, Branchs, selectedBranch } = this.state;
+        const { OwnerProfile } = this.props;
         return (
             <div className="content Branches">
                 <div className="react-notification-alert-container">
@@ -198,10 +207,12 @@ class Branches extends React.Component {
                                         <Col>
                                             <h2 className="title">{i18n.t("Branches.title")}</h2>
                                         </Col>
-                                        {Branchs && Branchs.length > 0 && <Col className="AddContainer">
-                                            <i className="fa fa-plus-circle" id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
-                                            <UncontrolledTooltip placement="right" target="Add">{i18n.t("Branches.add")}</UncontrolledTooltip>
-                                        </Col>
+                                        {OwnerProfile && OwnerProfile.role != "BRANCH" &&
+
+                                            <Col className="AddContainer">
+                                                <i className="fa fa-plus-circle" id="Add" onClick={() => { this.setState({ addMode: true, editMode: false, detailsMode: false }) }} />
+                                                <UncontrolledTooltip placement="right" target="Add">{i18n.t("Branches.add")}</UncontrolledTooltip>
+                                            </Col>
                                         }
                                     </Row>
                                 </CardHeader>
